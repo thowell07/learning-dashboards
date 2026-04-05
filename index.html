@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Learning Dashboards</title>
+  <meta name="description" content="A collection of self-contained visual learning dashboards." />
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --surface: #13161b;
+      --surface-hover: #1a1e25;
+      --border: #23282f;
+      --border-hover: #3a424d;
+      --text: #e8ebf0;
+      --muted: #8a929d;
+      --accent: #7cc4ff;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 80px 24px 96px;
+    }
+    header { margin-bottom: 56px; }
+    h1 {
+      font-size: clamp(28px, 4.5vw, 40px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 12px;
+    }
+    header p {
+      color: var(--muted);
+      margin: 0;
+      font-size: 17px;
+      max-width: 56ch;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+    .card {
+      display: block;
+      padding: 24px 24px 26px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: inherit;
+      text-decoration: none;
+      transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+    .card:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 6px;
+      letter-spacing: -0.01em;
+    }
+    .card p {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0;
+    }
+    .card .arrow {
+      color: var(--accent);
+      font-size: 13px;
+      margin-top: 14px;
+      display: inline-block;
+    }
+    footer {
+      margin-top: 72px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .wrap { padding: 56px 20px 72px; }
+      header { margin-bottom: 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Learning Dashboards</h1>
+      <p>A collection of self-contained visual guides for exploring topics I'm learning.</p>
+    </header>
+
+    <main class="grid">
+      <a class="card" href="pe-explainer.html">
+        <h2>Private Equity: A Visual Guide</h2>
+        <p>How PE firms raise, invest, and return capital.</p>
+        <span class="arrow">Open →</span>
+      </a>
+
+      <a class="card" href="venture-capital-guide.html">
+        <h2>Venture Capital — A Visual Guide</h2>
+        <p>The mechanics of VC funds, rounds, and returns.</p>
+        <span class="arrow">Open →</span>
+      </a>
+    </main>
+
+    <footer>More dashboards coming soon.</footer>
+  </div>
+</body>
+</html>

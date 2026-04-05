@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venture Capital — A Visual Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #f5f4f0;
+  --surface:   #ffffff;
+  --surface2:  #f0efe9;
+  --border:    #dddbd4;
+  --text:      #1a1a1a;
+  --muted:     #5a5a5a;
+  --soft:      #888880;
+  --green:     #1a7a4a;
+  --green-bg:  #e8f5ed;
+  --purple:    #5b3fa6;
+  --purple-bg: #eeebf8;
+  --amber:     #b45309;
+  --amber-bg:  #fef3e2;
+  --blue:      #1a5fa6;
+  --blue-bg:   #e8f0fb;
+  --red:       #b91c1c;
+  --red-bg:    #fde8e8;
+  --ink:       #111;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* HERO */
+.hero {
+  background: var(--ink);
+  color: #fff;
+  padding: 56px 48px 48px;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #a3e6c4;
+  margin-bottom: 14px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 800;
+  line-height: 1.05;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.hero h1 em { color: #6ee7b7; font-style: normal; }
+.hero-desc {
+  font-size: 16px;
+  color: #c0bfba;
+  max-width: 560px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* NAV */
+.nav-bar {
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  padding: 0 40px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.nav-bar::-webkit-scrollbar { height: 3px; }
+.nav-bar::-webkit-scrollbar-thumb { background: var(--green); }
+.nav-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--muted);
+  padding: 16px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  margin-bottom: -2px;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active {
+  color: var(--green);
+  border-bottom-color: var(--green);
+  font-weight: 700;
+}
+
+/* LAYOUT */
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 44px 32px 80px;
+}
+.section { display: none; animation: fadeUp 0.3s ease; }
+.section.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* SECTION HEADER */
+.sec-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.sec-lead {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 620px;
+  margin-bottom: 36px;
+  line-height: 1.65;
+}
+
+/* CALLOUT */
+.callout {
+  border-left: 4px solid var(--green);
+  background: var(--green-bg);
+  border-radius: 0 10px 10px 0;
+  padding: 18px 22px;
+  margin: 24px 0;
+}
+.callout.amber  { border-left-color: var(--amber);  background: var(--amber-bg); }
+.callout.purple { border-left-color: var(--purple); background: var(--purple-bg); }
+.callout.blue   { border-left-color: var(--blue);   background: var(--blue-bg); }
+.callout-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 6px;
+}
+.callout.amber  .callout-label { color: var(--amber); }
+.callout.purple .callout-label { color: var(--purple); }
+.callout.blue   .callout-label { color: var(--blue); }
+.callout p { font-size: 14px; color: var(--text); line-height: 1.65; }
+.callout p + p { margin-top: 8px; }
+.callout strong { font-weight: 700; color: var(--ink); }
+
+/* CARD */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 16px;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.card-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.ci-green  { background: var(--green-bg); }
+.ci-purple { background: var(--purple-bg); }
+.ci-amber  { background: var(--amber-bg); }
+.ci-blue   { background: var(--blue-bg); }
+.ci-red    { background: var(--red-bg); }
+.card-title { font-size: 15px; font-weight: 700; color: var(--ink); }
+.card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+.card p strong { font-weight: 600; color: var(--text); }
+
+/* GRID */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+@media (max-width: 620px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* STAT ROW */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 24px 0;
+}
+@media (max-width: 560px) { .stat-row { grid-template-columns: 1fr 1fr; } }
+.stat-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 16px;
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--green);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label { font-size: 12px; color: var(--muted); line-height: 1.45; }
+
+/* TABLE */
+.tbl-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  background: var(--surface2);
+  text-align: left;
+  padding: 11px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+tbody td {
+  padding: 11px 16px;
+  font-size: 13.5px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.55;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #fafaf8; }
+td.td-strong { color: var(--text); font-weight: 600; }
+td.td-green  { color: var(--green); font-weight: 700; }
+
+/* TIMELINE */
+.timeline { margin: 8px 0 24px; }
+.tl-item {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+.tl-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.tl-dot {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+  z-index: 1;
+}
+.tl-connector {
+  width: 2px;
+  background: var(--border);
+  height: 24px;
+  margin: 3px 0;
+}
+.tl-body {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  flex: 1;
+  margin-bottom: 20px;
+}
+.tl-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.tl-desc  { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+.tl-desc strong { color: var(--text); font-weight: 600; }
+.tl-tags  { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.tag {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 11px;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* FLOW */
+.flow {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px;
+  margin: 24px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.flow-node {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: center;
+  width: 130px;
+}
+.flow-node-icon  { font-size: 20px; margin-bottom: 6px; }
+.flow-node-title { font-size: 12px; font-weight: 700; color: var(--ink); line-height: 1.3; margin-bottom: 4px; }
+.flow-node-sub   { font-size: 11px; color: var(--muted); line-height: 1.4; }
+.flow-arrow { font-size: 18px; color: var(--green); padding: 0 10px; flex-shrink: 0; align-self: center; }
+
+/* POWER LAW */
+.plaw {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+}
+.plaw-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.plaw-sub   { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.bar-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 52px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.bar-label { font-size: 12.5px; color: var(--muted); text-align: right; font-weight: 500; }
+.bar-track {
+  height: 22px;
+  background: var(--surface2);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.bar-fill   { height: 100%; border-radius: 3px; }
+.bar-val    { font-size: 12.5px; font-weight: 700; }
+.plaw-note  { font-size: 13px; color: var(--muted); margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+
+/* COMPARE */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+@media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+.compare-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.compare-head { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.compare-head-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px; }
+.compare-head-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+.compare-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  align-items: flex-start;
+}
+.compare-item:last-child { border-bottom: none; }
+.ci-bul { flex-shrink: 0; font-weight: 700; margin-top: 1px; }
+
+/* CHECKLIST */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13.5px;
+  color: var(--muted);
+  align-items: flex-start;
+  line-height: 1.55;
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist li strong { color: var(--text); font-weight: 600; }
+.ck-icon { flex-shrink: 0; font-weight: 700; margin-top: 1px; }
+.ck-green  { color: var(--green); }
+.ck-amber  { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Financial Industry Knowledge Series</div>
+  <h1>Venture<br><em>Capital</em></h1>
+  <p class="hero-desc">How VC funds are structured, how deals get done, how money flows — and what it means through a fiduciary lens.</p>
+</div>
+
+<nav class="nav-bar">
+  <button class="nav-btn active" onclick="show('overview',this)">Overview</button>
+  <button class="nav-btn" onclick="show('structure',this)">Fund Structure</button>
+  <button class="nav-btn" onclick="show('lifecycle',this)">Lifecycle</button>
+  <button class="nav-btn" onclick="show('returns',this)">Returns</button>
+  <button class="nav-btn" onclick="show('stages',this)">Deal Stages</button>
+  <button class="nav-btn" onclick="show('mechanics',this)">Deal Mechanics</button>
+  <button class="nav-btn" onclick="show('vspe',this)">VC vs. PE</button>
+  <button class="nav-btn" onclick="show('fiduciary',this)">Fiduciary Lens</button>
+</nav>
+
+<div class="page">
+
+<!-- OVERVIEW -->
+<div class="section active" id="overview">
+  <div class="sec-eyebrow">Module 1</div>
+  <h2 class="sec-title">What Is Venture Capital?</h2>
+  <p class="sec-lead">VC is a form of private equity that finances early-stage, high-growth companies in exchange for equity. Investors accept a high failure rate, betting that a few massive winners will more than compensate for many losses.</p>
+
+  <div class="callout">
+    <div class="callout-label">Core Idea</div>
+    <p>Venture capitalists pool money from outside investors, buy minority equity stakes in startups, then sell those stakes at a profit when the company is acquired or goes public. The entire model depends on a <strong>small number of investments returning enormous multiples</strong> — enough to offset the majority that fail or return little.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon ci-green">🎯</div>
+        <div class="card-title">What VC Targets</div>
+      </div>
+      <p>Early-stage companies with <strong>high growth potential, scalable business models, and large addressable markets</strong> — typically in tech, biotech, fintech, or consumer sectors. These companies usually cannot access traditional bank loans because they lack revenue history or collateral.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon ci-purple">💡</div>
+        <div class="card-title">Why Companies Use VC</div>
+      </div>
+      <p>Startups lack the revenue history, assets, and cash flow that banks require. VC provides <strong>risk capital in exchange for equity</strong>, plus strategic advice, industry networks, and credibility that help startups grow faster and attract future investors.</p>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-num">~2%</div>
+      <div class="stat-label">of VC-backed companies reach unicorn status ($1B+ valuation)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">10–12×</div>
+      <div class="stat-label">Return a single "grand slam" deal must generate to carry a whole fund</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">7–10 yrs</div>
+      <div class="stat-label">Typical hold period from initial investment to exit</div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Firm</th><th>Founded</th><th>Notable Investment</th><th>Outcome</th></tr></thead>
+      <tbody>
+        <tr><td class="td-strong">Sequoia Capital</td><td>1972</td><td>Apple, Google, WhatsApp</td><td>WhatsApp: ~$60M invested → $19B Facebook acquisition</td></tr>
+        <tr><td class="td-strong">Andreessen Horowitz</td><td>2009</td><td>Facebook, Airbnb, Coinbase</td><td>Facebook: ~$80M invested → $1.5B+ at IPO</td></tr>
+        <tr><td class="td-strong">Benchmark</td><td>1995</td><td>Uber, eBay, Snapchat</td><td>Uber: $12M invested → ~$7B at IPO</td></tr>
+        <tr><td class="td-strong">Kleiner Perkins</td><td>1972</td><td>Amazon, Google, Genentech</td><td>Google: $12.5M invested → returned billions</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- STRUCTURE -->
+<div class="section" id="structure">
+  <div class="sec-eyebrow">Module 2</div>
+  <h2 class="sec-title">Fund Structure & The Players</h2>
+  <p class="sec-lead">VC funds are organized as limited partnerships. Two main parties — the GP (the VC firm) and LPs (outside investors) — each play distinct roles with different rights, responsibilities, and risk exposure.</p>
+
+  <div class="flow">
+    <div class="flow-node">
+      <div class="flow-node-icon">🏦</div>
+      <div class="flow-node-title">Limited Partners (LPs)</div>
+      <div class="flow-node-sub">Pension funds, endowments, family offices, HNW individuals</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="border-color:var(--green); border-width:2px;">
+      <div class="flow-node-icon">📋</div>
+      <div class="flow-node-title">VC Fund (LP Entity)</div>
+      <div class="flow-node-sub">Legal vehicle holding all committed capital</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="flow-node-icon">⚙️</div>
+      <div class="flow-node-title">General Partner (GP)</div>
+      <div class="flow-node-sub">VC firm that manages the fund and makes all investment decisions</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="flow-node-icon">🚀</div>
+      <div class="flow-node-title">Portfolio Companies</div>
+      <div class="flow-node-sub">10–25 startups receive equity investment</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon ci-green">⚙️</div><div class="card-title">General Partners (GPs)</div></div>
+      <p>The VC firm itself. GPs source deals, conduct diligence, make investment decisions, sit on boards, and drive exits. They bear <strong>unlimited liability</strong> and typically contribute 1–3% of the fund's capital ("GP commit") to align incentives with LPs.</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon ci-blue">🏦</div><div class="card-title">Limited Partners (LPs)</div></div>
+      <p>Outside investors who supply ~97–99% of capital. They have <strong>limited liability</strong> — they can only lose what they invested. Typical LPs: university endowments (Yale, Harvard), pension funds, sovereign wealth funds, family offices, and fund-of-funds vehicles.</p>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-label">Key Concept: Capital Commitment vs. Capital Call</div>
+    <p>LPs don't hand over all their money upfront. They <strong>commit</strong> a total amount, and the GP issues <strong>capital calls</strong> (drawdowns) in tranches as investments are made. This lets LPs keep uninvested capital deployed elsewhere until the GP is ready to use it.</p>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td class="td-strong">Fund Size</td><td>Total capital committed by all LPs — ranges from $10M (micro-VC) to $10B+ (Sequoia, Tiger)</td></tr>
+        <tr><td class="td-strong">Vintage Year</td><td>The year the fund was formed — used to benchmark performance against peer funds</td></tr>
+        <tr><td class="td-strong">Investment Period</td><td>First 3–5 years of fund life when new investments are actively made</td></tr>
+        <tr><td class="td-strong">Fund Life</td><td>Total lifespan — typically 10 years, often with two 1-year extension options</td></tr>
+        <tr><td class="td-strong">Management Fee</td><td>Annual fee (~2%) on committed capital paid to the GP to cover operations and salaries</td></tr>
+        <tr><td class="td-strong">Carried Interest (Carry)</td><td>GP's profit share — typically 20% of returns above the hurdle rate</td></tr>
+        <tr><td class="td-strong">Hurdle Rate</td><td>Minimum return LPs must receive (typically 8%) before the GP earns any carried interest</td></tr>
+        <tr><td class="td-strong">GP Commit</td><td>The GP's own capital invested alongside LPs — aligns incentives; usually 1–3% of fund size</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- LIFECYCLE -->
+<div class="section" id="lifecycle">
+  <div class="sec-eyebrow">Module 3</div>
+  <h2 class="sec-title">The Investment Lifecycle</h2>
+  <p class="sec-lead">From first LP commitment to final distribution, a VC fund moves through five distinct phases over roughly a decade.</p>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:var(--green-bg); color:var(--green); border-color:var(--green);">1</div>
+        <div class="tl-connector"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">Fundraising</div>
+        <div class="tl-desc">The GP pitches LPs on their investment thesis, team track record, and target returns. Capital is committed progressively — a "first close" happens once a minimum threshold is met, with the fund continuing to accept commitments until "final close." First-time funds can take 18+ months; established firms may close in weeks.</div>
+        <div class="tl-tags"><span class="tag">Typical duration: 6–18 months</span><span class="tag">First Close → Final Close</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:var(--purple-bg); color:var(--purple); border-color:var(--purple);">2</div>
+        <div class="tl-connector"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">Deal Sourcing & Due Diligence</div>
+        <div class="tl-desc">GPs actively source investments through networks, accelerators, inbound pitches, and proprietary research. A typical top-tier fund reviews 1,000+ deals per year and invests in just 10–20. Due diligence covers market size, team assessment, financial projections, competitive landscape, and technology risk.</div>
+        <div class="tl-tags"><span class="tag">Years 1–5 (investment period)</span><span class="tag">~1,000 deals reviewed → 10–20 invested</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:var(--blue-bg); color:var(--blue); border-color:var(--blue);">3</div>
+        <div class="tl-connector"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">Portfolio Management</div>
+        <div class="tl-desc">After investing, GPs actively support portfolio companies: board participation, strategic introductions, executive recruiting, and follow-on investment decisions. Most funds reserve 40–50% of capital for follow-on rounds in their strongest performers — doubling down on what's working and protecting ownership stakes.</div>
+        <div class="tl-tags"><span class="tag">Years 2–8</span><span class="tag">Board seats</span><span class="tag">Follow-on reserves</span><span class="tag">Pro-rata rights</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:var(--amber-bg); color:var(--amber); border-color:var(--amber);">4</div>
+        <div class="tl-connector"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">Exits & Distributions</div>
+        <div class="tl-desc">The GP converts illiquid equity into cash to return to LPs. The three main paths: <strong>IPO</strong> (company lists publicly), <strong>M&A</strong> (company is acquired by a strategic buyer or PE firm), or <strong>secondary sale</strong> (GP sells shares to another investor). Proceeds flow through a distribution waterfall — LPs receive return of capital first, then profits are split per the carry arrangement.</div>
+        <div class="tl-tags"><span class="tag">Years 5–10</span><span class="tag">IPO</span><span class="tag">M&A / Acquisition</span><span class="tag">Secondary Sale</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="border-color:var(--border);">5</div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">Wind-Down</div>
+        <div class="tl-desc">The fund entity winds down. Remaining positions are written off, sold in secondary markets, or distributed in-kind as stock to LPs. The GP reconciles final carried interest and settles any clawback provisions. Meanwhile, the same firm is typically already investing from Fund III or IV.</div>
+        <div class="tl-tags"><span class="tag">Year 10+</span><span class="tag">Final distributions</span><span class="tag">Clawback reconciliation</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RETURNS -->
+<div class="section" id="returns">
+  <div class="sec-eyebrow">Module 4</div>
+  <h2 class="sec-title">How VC Makes Money</h2>
+  <p class="sec-lead">Two revenue streams for the GP: management fees keep the lights on, but carried interest is where real wealth is built. For LPs, everything depends on the power law of portfolio returns.</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon ci-blue">💼</div><div class="card-title">Management Fees</div></div>
+      <p>Typically <strong>2% per year</strong> on committed capital. On a $500M fund, that's $10M/year — covers salaries, office, travel, and operations. This is operational reimbursement, not profit. Fees typically step down to ~1.5% after the investment period ends (years 6–10).</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon ci-green">🏆</div><div class="card-title">Carried Interest ("Carry")</div></div>
+      <p>The GP earns <strong>20% of all profits above the hurdle rate</strong>. On a $500M fund returning $2B in gains, the GP earns $400M in carry. This is the primary wealth-generation mechanism for VC professionals — and directly aligns GP incentives with LP outcomes.</p>
+    </div>
+  </div>
+
+  <div class="callout purple">
+    <div class="callout-label">Worked Example — $100M Fund</div>
+    <p><strong>Setup:</strong> LPs commit $100M. GP invests in 15 startups over 5 years.</p>
+    <p><strong>Outcomes:</strong> 8 companies → $0 (written off). 5 companies → return $40M combined (1–2× each). 2 companies → return $210M combined (15–20× each).</p>
+    <p><strong>Total returned:</strong> $250M. Net profit over LP capital: $150M.</p>
+    <p><strong>Distribution:</strong> LPs receive $100M (return of capital) + $120M (their 80% of profits). GP receives $30M carry (20% of $150M gains) + ~$10M in management fees over 10 years. <strong>Total GP economics: ~$40M on a fund they contributed ~$2M to.</strong></p>
+  </div>
+
+  <div class="plaw">
+    <div class="plaw-title">⚡ The Power Law — Why One Deal Can Define a Fund</div>
+    <div class="plaw-sub">In a typical 20-company portfolio, most of the total return comes from just 1–2 investments. This is why VCs need every deal to have massive upside potential.</div>
+    <div class="bar-row">
+      <div class="bar-label" style="color:var(--ink); font-weight:700;">Company A ✨</div>
+      <div class="bar-track"><div class="bar-fill" style="width:80%; background:linear-gradient(90deg,#1a7a4a,#34d399);"></div></div>
+      <div class="bar-val" style="color:var(--green);">25×</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="color:var(--ink);">Company B</div>
+      <div class="bar-track"><div class="bar-fill" style="width:38%; background:var(--purple); opacity:0.65;"></div></div>
+      <div class="bar-val" style="color:var(--purple);">8×</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Company C</div>
+      <div class="bar-track"><div class="bar-fill" style="width:16%; background:var(--blue); opacity:0.55;"></div></div>
+      <div class="bar-val" style="color:var(--blue);">2×</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Companies D–H</div>
+      <div class="bar-track"><div class="bar-fill" style="width:8%; background:var(--soft); opacity:0.4;"></div></div>
+      <div class="bar-val" style="color:var(--soft);">~1×</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Companies I–T</div>
+      <div class="bar-track"><div class="bar-fill" style="width:3%; background:#ef4444; opacity:0.45;"></div></div>
+      <div class="bar-val" style="color:var(--red);">0×</div>
+    </div>
+    <p class="plaw-note">Company A alone may account for 60–70% of total fund returns. This is why VCs need every investment to have the potential for 20–30× returns — even if most won't get there.</p>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Metric</th><th>What It Measures</th><th>Strong Benchmark</th></tr></thead>
+      <tbody>
+        <tr><td class="td-strong">TVPI</td><td>(Realized + unrealized value) ÷ invested capital — total value picture</td><td class="td-green">3× or higher</td></tr>
+        <tr><td class="td-strong">DPI</td><td>Actual cash returned to LPs ÷ capital called. The only metric that truly matters — real money back.</td><td class="td-green">1× = in the money</td></tr>
+        <tr><td class="td-strong">IRR</td><td>Annualized return, accounting for the timing of cash flows in and out</td><td class="td-green">20%+ net to LPs</td></tr>
+        <tr><td class="td-strong">MOIC</td><td>Total proceeds ÷ amount invested on a specific deal (not time-adjusted)</td><td class="td-green">5–10× on top deals</td></tr>
+        <tr><td class="td-strong">RVPI</td><td>Unrealized portfolio value only — high early on, should decline as exits occur</td><td>Depends on fund age</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- STAGES -->
+<div class="section" id="stages">
+  <div class="sec-eyebrow">Module 5</div>
+  <h2 class="sec-title">Deal Stages Explained</h2>
+  <p class="sec-lead">VC investments occur across multiple rounds as a startup matures. Each stage has a different risk profile, check size, and return expectation.</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:var(--red-bg); color:var(--red); border-color:var(--red);">🌱</div>
+        <div class="tl-connector"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">Pre-Seed</div>
+        <div class="tl-desc">Idea stage. Founders may have only a pitch deck and a prototype — sometimes less. Investors are typically angel investors, friends and family, or pre-seed micro-funds. Highest risk; highest potential multiple.</div>
+        <div class="tl-tags"><span class="tag">Check: $50K–$500K</span><span class="tag">Valuation: $1M–$5M</span><span class="tag">Equity: 10–20%</span></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:var(--amber-bg); color:var(--amber); border-color:var(--amber);">🌿</div>
+        <div class="tl-connector"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">Seed Round</div>
+        <div class="tl-desc">The company has early evidence of concept — perhaps a beta product and initial users. Dedicated seed funds and angel syndicates invest to help build the product and expand the team. Most companies never advance beyond this stage.</div>
+        <div class="tl-tags"><span class="tag">Check: $500K–$3M</span><span class="tag">Valuation: $5M–$20M</span><span class="tag">Equity: 10–25%</span></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:var(--green-bg); color:var(--green); border-color:var(--green);">🌳</div>
+        <div class="tl-connector"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">Series A</div>
+        <div class="tl-desc">The company has product-market fit and early revenue traction. This is where most institutional VC funds engage. Capital goes toward scaling go-to-market, growing the team, and accelerating customer acquisition. Tier-1 VCs (Sequoia, a16z, Benchmark) compete aggressively for the best Series A deals.</div>
+        <div class="tl-tags"><span class="tag">Check: $3M–$15M</span><span class="tag">Valuation: $20M–$80M</span><span class="tag">Equity: 15–25%</span></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:var(--purple-bg); color:var(--purple); border-color:var(--purple);">🚀</div>
+        <div class="tl-connector"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">Series B / C</div>
+        <div class="tl-desc">The company is scaling fast and needs capital to dominate its market — hiring aggressively, expanding geographically, and increasing marketing spend. Risk is lower but so is potential upside. Growth equity firms and late-stage VCs (Tiger Global, General Atlantic) begin participating alongside traditional VC.</div>
+        <div class="tl-tags"><span class="tag">Check: $15M–$100M+</span><span class="tag">Valuation: $80M–$1B+</span><span class="tag">Equity: 10–20%</span></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:var(--blue-bg); color:var(--blue); border-color:var(--blue);">🦄</div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">Late Stage / Pre-IPO</div>
+        <div class="tl-desc">Company is valued at $1B+ and preparing for an IPO or large acquisition. Risk is substantially lower; returns are more modest but still attractive. Investors include crossover hedge funds, sovereign wealth funds, and late-stage PE. At this stage, many institutional public market investors begin crossing into private rounds.</div>
+        <div class="tl-tags"><span class="tag">Check: $100M+</span><span class="tag">Valuation: $1B–$100B+</span><span class="tag">Equity: 5–15%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout purple">
+    <div class="callout-label">Real Example — Airbnb's Funding Journey</div>
+    <p><strong>2008 (Pre-Seed):</strong> Y Combinator + angels invest ~$620K at a $2.4M valuation. Founders were renting out air mattresses in their own apartment to pay rent.</p>
+    <p><strong>2009 (Series A):</strong> Sequoia Capital leads a $7.2M round at ~$30M valuation.</p>
+    <p><strong>2011 (Series B):</strong> Andreessen Horowitz leads a $112M round at ~$1.3B valuation.</p>
+    <p><strong>2020 (IPO):</strong> Airbnb goes public at $68/share (~$47B market cap), closing its first day at $144/share (~$100B). Sequoia's ~$7M Series A investment was worth well over $1 billion.</p>
+  </div>
+</div>
+
+<!-- MECHANICS -->
+<div class="section" id="mechanics">
+  <div class="sec-eyebrow">Module 6</div>
+  <h2 class="sec-title">Deal Mechanics & Key Terms</h2>
+  <p class="sec-lead">How VC investments are actually structured — the instruments used, investor protections built in, and the math behind ownership and returns.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Instrument</th><th>What It Is</th><th>Typical Use</th></tr></thead>
+      <tbody>
+        <tr><td class="td-strong">Preferred Stock</td><td>Equity with special rights — liquidation preference, anti-dilution. The standard institutional VC investment vehicle.</td><td>Series A, B, C+</td></tr>
+        <tr><td class="td-strong">Convertible Note</td><td>Short-term loan that converts to equity at the next priced round, usually at a discount to reward early risk-taking.</td><td>Pre-seed, bridge rounds</td></tr>
+        <tr><td class="td-strong">SAFE</td><td>Simple Agreement for Future Equity — like a convertible note but not debt. No interest, no maturity date. Converts at the next priced round.</td><td>Seed, pre-seed</td></tr>
+        <tr><td class="td-strong">Common Stock</td><td>Basic equity with no special rights. What founders and employees receive. VCs almost never accept common stock.</td><td>Founders, employees only</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon ci-amber">🛡️</div><div class="card-title">Liquidation Preference</div></div>
+      <p>VCs get paid <strong>before common stockholders</strong> in any exit or liquidation. A 1× preference means VCs recover their full investment first. A 2× preference means they receive 2× their capital before anyone else. This is the single most important investor protection in any VC deal.</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon ci-purple">🔒</div><div class="card-title">Anti-Dilution Protection</div></div>
+      <p>If the company raises a future round at a lower valuation ("down round"), anti-dilution provisions adjust the VC's conversion price to compensate. The most common form is <strong>broad-based weighted average</strong> — less punitive to founders than full ratchet anti-dilution.</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon ci-blue">📐</div><div class="card-title">Pro-Rata Rights</div></div>
+      <p>The right to <strong>maintain ownership percentage</strong> in future rounds. If a VC owns 15% after Series A, pro-rata rights let them invest again in Series B to avoid dilution. These are critical for protecting stakes in winning companies — VCs negotiate hard for them.</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon ci-green">🗳️</div><div class="card-title">Board Seats & Governance</div></div>
+      <p>VCs typically negotiate a <strong>board seat</strong> with their investment. This provides oversight authority and influence over key decisions: CEO changes, major acquisitions, follow-on financing, and exit timing. Most startup boards have 3–5 members total.</p>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-label">Term Sheet Basics</div>
+    <p>The term sheet is a non-binding document outlining key deal terms before definitive legal agreements are drafted. Core terms: pre-money and post-money valuation, investment amount, liquidation preference, anti-dilution type, board composition, and voting rights.</p>
+    <p><strong>The formula:</strong> Pre-money valuation + new investment = post-money valuation. If a company is valued at $20M pre-money and a VC invests $5M, post-money = $25M and the VC owns 20% ($5M ÷ $25M).</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Deal Math Example</div>
+    <p><strong>Series A setup:</strong> $18M pre-money valuation. VC invests $6M. Post-money = $24M. VC ownership = $6M ÷ $24M = <strong>25%.</strong></p>
+    <p><strong>Exit scenario:</strong> Company acquired for $120M. VC has 1× liquidation preference on $6M — recovers $6M first. Remaining $114M is split pro-rata: VC's 25% = $28.5M. <strong>Total VC proceeds: $34.5M on a $6M investment = 5.75× MOIC.</strong></p>
+  </div>
+</div>
+
+<!-- VC vs PE -->
+<div class="section" id="vspe">
+  <div class="sec-eyebrow">Module 7</div>
+  <h2 class="sec-title">VC vs. Private Equity</h2>
+  <p class="sec-lead">Often mentioned in the same breath, but fundamentally different in strategy, deal structure, risk profile, and the types of companies they target.</p>
+
+  <div class="compare-grid">
+    <div class="compare-col">
+      <div class="compare-head" style="background:var(--green-bg); border-bottom:1px solid #c6e8d6;">
+        <div class="compare-head-label" style="color:var(--green);">Venture Capital</div>
+        <div class="compare-head-title">Early-stage, high-risk, equity-only</div>
+      </div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--green);">▸</span>Invests in early-stage startups (pre-revenue to early revenue)</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--green);">▸</span>Takes minority stakes (10–30%) — no control</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--green);">▸</span>No leverage or debt used in deal structure</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--green);">▸</span>Bets on future growth, not current cash flow</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--green);">▸</span>Exit via IPO or acquisition (7–10 yr horizon)</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--green);">▸</span>Most investments fail; 1–2 wins define the fund</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--green);">▸</span>Fund sizes: $10M–$10B</div>
+      <div class="compare-item" style="border-bottom:none;"><span class="ci-bul" style="color:var(--green);">▸</span>Target: 3× TVPI or better</div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-head" style="background:var(--purple-bg); border-bottom:1px solid #d4cef0;">
+        <div class="compare-head-label" style="color:var(--purple);">Private Equity</div>
+        <div class="compare-head-title">Mature companies, control, leverage</div>
+      </div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--purple);">▸</span>Invests in established, cash-flow-positive businesses</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--purple);">▸</span>Takes majority or full control stakes (51–100%)</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--purple);">▸</span>Heavy use of debt financing (leveraged buyouts)</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--purple);">▸</span>Bets on operational improvements and margin expansion</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--purple);">▸</span>Exit via resale or IPO (3–7 yr horizon)</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--purple);">▸</span>More predictable, less binary return profile</div>
+      <div class="compare-item"><span class="ci-bul" style="color:var(--purple);">▸</span>Fund sizes: $500M–$100B+</div>
+      <div class="compare-item" style="border-bottom:none;"><span class="ci-bul" style="color:var(--purple);">▸</span>Target: 20%+ IRR</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon ci-amber">🔄</div><div class="card-title">Where They Overlap: Growth Equity</div></div>
+    <p>Between VC and PE sits <strong>growth equity</strong> — investing in companies past startup risk but not yet mature enough for a traditional buyout. Firms like General Atlantic, Insight Partners, and Tiger Global operate here, typically investing $25M–$500M for minority stakes in companies generating $10M–$100M+ in revenue and scaling fast.</p>
+  </div>
+
+  <div class="callout amber">
+    <div class="callout-label">Why This Matters in Your Work</div>
+    <p>For UHNW clients and institutional portfolios, both VC and PE appear as alternatives allocations. VC is typically a smaller slice (5–10%) due to illiquidity and binary risk. PE may represent 15–25% of a sophisticated portfolio. Both require long lock-up periods and are restricted to accredited investors or qualified purchasers — directly relevant to any fiduciary recommending or reviewing these allocations.</p>
+  </div>
+</div>
+
+<!-- FIDUCIARY -->
+<div class="section" id="fiduciary">
+  <div class="sec-eyebrow">Module 8</div>
+  <h2 class="sec-title">VC Through a Fiduciary Lens</h2>
+  <p class="sec-lead">Key considerations when VC intersects with fiduciary obligations — particularly relevant for private bank, trust, and philanthropic contexts.</p>
+
+  <div class="callout amber">
+    <div class="callout-label">Core Fiduciary Question</div>
+    <p>VC investments are illiquid, high-risk, and binary in nature. A fiduciary must evaluate whether these characteristics are consistent with the client's investment policy statement, time horizon, liquidity needs, and documented risk tolerance.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon ci-amber">⚖️</div><div class="card-title">When Is VC Appropriate for Trust or Managed Account Clients?</div></div>
+    <ul class="checklist">
+      <li><span class="ck-icon ck-green">▸</span><span><strong>Suitability:</strong> Is the client a Qualified Purchaser ($5M+ in investments) or Accredited Investor ($1M+ net worth excluding home)? VC funds are typically restricted to QPs or Qualified Eligible Persons under the Investment Company Act.</span></li>
+      <li><span class="ck-icon ck-green">▸</span><span><strong>Liquidity:</strong> VC commitments are locked for 7–12 years. Fiduciaries must ensure sufficient liquid assets outside the VC allocation to cover trust distributions, expenses, and beneficiary needs.</span></li>
+      <li><span class="ck-icon ck-green">▸</span><span><strong>Concentration:</strong> A single VC fund is itself concentrated across a handful of startups. Due diligence must assess the GP's portfolio diversification across sectors, stages, and vintages.</span></li>
+      <li><span class="ck-icon ck-green">▸</span><span><strong>Prudent Investor Rule:</strong> Under UPIA and most state trust codes, investments are evaluated as part of the total portfolio — not in isolation. VC may be prudent within a diversified alternatives sleeve even though individual positions are high-risk.</span></li>
+      <li><span class="ck-icon ck-green">▸</span><span><strong>Conflicts of Interest:</strong> If the institution is also an LP in a fund it recommends to clients, robust disclosure and conflict management procedures are required — especially critical in the private bank context.</span></li>
+    </ul>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon ci-blue">📋</div><div class="card-title">Due Diligence Checklist</div></div>
+      <ul class="checklist">
+        <li><span class="ck-icon ck-green">✓</span>GP track record by vintage year (DPI, TVPI, IRR)</li>
+        <li><span class="ck-icon ck-green">✓</span>Investment thesis consistency across multiple funds</li>
+        <li><span class="ck-icon ck-green">✓</span>Fund terms — fee percentage, carry, hurdle rate</li>
+        <li><span class="ck-icon ck-green">✓</span>Team stability and key person risk provisions</li>
+        <li><span class="ck-icon ck-green">✓</span>Portfolio company governance standards</li>
+        <li><span class="ck-icon ck-green">✓</span>Valuation methodology — how are unrealized marks set?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon ci-red">⚠️</div><div class="card-title">Key Risks to Flag</div></div>
+      <ul class="checklist">
+        <li><span class="ck-icon ck-amber">!</span>J-curve: early IRR looks negative as fees are charged before exits occur</li>
+        <li><span class="ck-icon ck-amber">!</span>Valuation opacity: marks are subjective until a liquidity event</li>
+        <li><span class="ck-icon ck-amber">!</span>Vintage year risk: returns are heavily tied to the economic cycle</li>
+        <li><span class="ck-icon ck-amber">!</span>Capital call risk: LP must have liquidity available on short notice</li>
+        <li><span class="ck-icon ck-amber">!</span>Tax complexity: K-1s, UBTI for tax-exempt investors, multi-state filings</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-label">The J-Curve — Why VC Looks Bad Before It Looks Good</div>
+    <p>In a fund's early years, LPs see negative reported returns. Capital is being called and deployed, management fees are being charged, and portfolio companies haven't had time to mature. The IRR looks poor in Years 1–3. As companies grow and exits begin in Years 5–8+, the return line curves sharply upward — forming a "J." Fiduciaries must set this expectation clearly with clients upfront to prevent premature secondary market sales at a discount.</p>
+  </div>
+
+  <div class="callout amber">
+    <div class="callout-label">Practice Note — VC in Philanthropic Contexts</div>
+    <p>For foundations and donor-advised funds (relevant to Philanthropic Solutions work), VC raises additional considerations. <strong>Program-related investments (PRIs)</strong> allow foundations to make mission-aligned investments in startups — and these can count toward the 5% distribution requirement. Impact VC funds (climate tech, healthcare access, education) may qualify.</p>
+    <p>Key caution: excise tax on investment income applies differently than for pension funds, and <strong>UBTI can be triggered</strong> in certain fund structures — typically requiring a blocker corporation for tax-exempt investors.</p>
+  </div>
+</div>
+
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

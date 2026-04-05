@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Private Equity: A Visual Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #0f0e0c;
+    --cream: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8d49a;
+    --rust: #b85c38;
+    --forest: #2a4a3e;
+    --slate: #4a5568;
+    --warm-white: #faf8f3;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--ink);
+    padding: 12px 32px;
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  nav span {
+    color: var(--gold-light);
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    margin-right: 16px;
+  }
+  nav button {
+    background: none;
+    border: 1px solid #444;
+    color: #ccc;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  nav button:hover, nav button.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* SECTIONS */
+  .section {
+    display: none;
+    padding: 48px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    animation: fadeIn 0.4s ease;
+  }
+  .section.visible { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3.5vw, 30px);
+    font-weight: 700;
+    margin: 36px 0 16px;
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 24px 0 10px;
+    color: var(--forest);
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  p { margin-bottom: 14px; font-size: 15px; color: #2a2a2a; }
+
+  /* GOLD RULE */
+  .rule {
+    width: 60px; height: 3px;
+    background: var(--gold);
+    margin: 16px 0 24px;
+  }
+
+  /* CALLOUT CARD */
+  .callout {
+    background: var(--ink);
+    color: var(--gold-light);
+    border-left: 4px solid var(--gold);
+    padding: 20px 24px;
+    border-radius: 2px;
+    margin: 24px 0;
+  }
+  .callout strong { color: #fff; }
+  .callout p { color: var(--gold-light); font-size: 14px; margin: 0; }
+
+  /* CARDS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .card {
+    background: var(--warm-white);
+    border: 1px solid #ddd;
+    border-top: 3px solid var(--gold);
+    padding: 20px;
+    border-radius: 2px;
+  }
+  .card .icon { font-size: 26px; margin-bottom: 10px; }
+  .card h4 { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 8px; }
+  .card p { font-size: 13px; color: var(--slate); margin: 0; }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin: 28px 0;
+  }
+  .flow-node {
+    background: var(--forest);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    flex: 1;
+    min-width: 110px;
+  }
+  .flow-node.gold {
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .flow-node.rust { background: var(--rust); }
+  .flow-arrow {
+    color: var(--gold);
+    font-size: 22px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .flow-label {
+    font-size: 11px;
+    color: var(--slate);
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  /* EXAMPLE BOX */
+  .example {
+    background: #fff;
+    border: 1px solid #e0d8c8;
+    border-left: 5px solid var(--rust);
+    padding: 22px 26px;
+    border-radius: 2px;
+    margin: 24px 0;
+  }
+  .example .tag {
+    display: inline-block;
+    background: var(--rust);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+  }
+  .example h4 { font-family: 'Playfair Display', serif; font-size: 17px; margin-bottom: 10px; }
+
+  /* COMPARISON TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+  thead th {
+    background: var(--ink);
+    color: var(--gold-light);
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+  }
+  tbody td { padding: 11px 16px; border-bottom: 1px solid #e0d8c8; }
+  tbody tr:nth-child(even) td { background: #faf6ee; }
+  tbody td:first-child { font-weight: 600; color: var(--forest); }
+
+  /* NUMBERS */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+  }
+  .stat {
+    background: var(--ink);
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 3px;
+  }
+  .stat .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--gold);
+    display: block;
+  }
+  .stat .label { font-size: 12px; color: #aaa; margin-top: 4px; }
+
+  /* MONEY MATH */
+  .math-box {
+    background: var(--warm-white);
+    border: 2px solid var(--gold);
+    padding: 24px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+  .math-box h4 { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 16px; }
+  .math-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #d8cebc;
+    font-size: 14px;
+  }
+  .math-row:last-child { border-bottom: none; }
+  .math-row .label { color: var(--slate); }
+  .math-row .val { font-weight: 600; color: var(--forest); }
+  .math-row .val.positive { color: #2a7a4e; }
+  .math-row .val.negative { color: var(--rust); }
+  .math-row.total { margin-top: 8px; padding-top: 12px; border-top: 2px solid var(--gold); }
+  .math-row.total .label, .math-row.total .val { font-weight: 700; font-size: 15px; }
+
+  /* CAPITAL STACK */
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 20px 0;
+    max-width: 500px;
+  }
+  .stack-layer {
+    padding: 16px 20px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .stack-layer .pct { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
+
+  /* TAG */
+  .pill {
+    display: inline-block;
+    background: var(--gold-light);
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin: 2px;
+  }
+
+  /* TIMELINE */
+  .timeline { margin: 24px 0; }
+  .tl-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .tl-dot {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px;
+    flex-shrink: 0;
+    color: var(--ink);
+  }
+  .tl-content h4 { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 4px; }
+  .tl-content p { font-size: 13px; color: var(--slate); margin: 0; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 32px 0;
+  }
+
+  /* RESPONSIVE */
+  @media(max-width: 600px) {
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span>PE Guide</span>
+  <button class="active" onclick="show('overview')">Overview</button>
+  <button onclick="show('capital')">Capital</button>
+  <button onclick="show('howworks')">How It Works</button>
+  <button onclick="show('returns')">Returns</button>
+  <button onclick="show('types')">Fund Types</button>
+</nav>
+
+<!-- ===================== OVERVIEW ===================== -->
+<div id="overview" class="section visible">
+  <p class="subtitle">Module 1</p>
+  <h1>What Is Private Equity?</h1>
+  <div class="rule"></div>
+
+  <p>Private equity (PE) is a form of investment where firms raise money from large investors, pool it into a fund, and use that fund to acquire ownership stakes in companies — typically with the goal of improving them and selling them later at a profit.</p>
+  <p>Unlike buying stock in a public company (where you're one of millions of shareholders with no control), PE firms take <strong>large, concentrated ownership positions</strong> — often a controlling stake — in private companies or take public companies private.</p>
+
+  <div class="callout">
+    <strong>The Core Idea:</strong>
+    <p>Buy a company → Fix, grow, or restructure it → Sell it for more than you paid. The difference, after fees and costs, is the profit.</p>
+  </div>
+
+  <h2>Who Are the Players?</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="icon">🏦</div>
+      <h4>LP — Limited Partner</h4>
+      <p>The investors who provide the capital. Think: pension funds, university endowments, sovereign wealth funds, family offices, ultra-high-net-worth individuals.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🏢</div>
+      <h4>GP — General Partner</h4>
+      <p>The PE firm itself. They manage the fund, source deals, execute investments, and make all decisions. Examples: Blackstone, KKR, Carlyle, Apollo.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🏭</div>
+      <h4>Portfolio Company</h4>
+      <p>The business being acquired and operated. Could be a manufacturer, software company, healthcare provider, restaurant chain — any industry.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🏗️</div>
+      <h4>Debt Providers</h4>
+      <p>Banks and credit funds that lend money to help fund acquisitions (more on this in the LBO section). They get paid back with interest before equity investors profit.</p>
+    </div>
+  </div>
+
+  <h2>PE vs. Other Asset Classes</h2>
+  <table>
+    <thead><tr><th>Feature</th><th>Public Stocks</th><th>Private Equity</th><th>Venture Capital</th></tr></thead>
+    <tbody>
+      <tr><td>Liquidity</td><td>High — sell any day</td><td>Low — locked up 5–10 years</td><td>Low — locked up 7–12 years</td></tr>
+      <tr><td>Stage</td><td>Public companies</td><td>Established/mature companies</td><td>Early-stage startups</td></tr>
+      <tr><td>Control</td><td>Minority / no control</td><td>Majority / controlling</td><td>Minority but board influence</td></tr>
+      <tr><td>Target Return</td><td>7–10% annually</td><td>15–25%+ annually</td><td>30%+ (high risk)</td></tr>
+      <tr><td>Min Investment</td><td>$1</td><td>$1M–$10M+</td><td>$250K–$1M+</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===================== CAPITAL ===================== -->
+<div id="capital" class="section">
+  <p class="subtitle">Module 2</p>
+  <h1>Understanding Capital</h1>
+  <div class="rule"></div>
+
+  <p>Before understanding PE deals, you need to understand <strong>capital</strong> — the money used to finance an enterprise. Capital isn't just "money." It has structure, priority, and cost.</p>
+
+  <h2>The Two Types of Capital</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="icon">📋</div>
+      <h4>Debt Capital</h4>
+      <p>Borrowed money that must be repaid with interest. The lender doesn't own anything — they just have a contractual right to get paid. If the company fails, debt holders get paid <em>first</em> from remaining assets.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔑</div>
+      <h4>Equity Capital</h4>
+      <p>Ownership money. Equity holders own a piece of the company. They have no guaranteed return — if the company thrives, they profit enormously; if it fails, they can lose everything. Equity holders are paid <em>last</em>.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <span class="tag">Real-World Analogy</span>
+    <h4>Your Home as a Capital Structure</h4>
+    <p>If your house is worth $500K and you have a $350K mortgage:</p>
+    <ul style="margin: 10px 0 0 20px; font-size: 14px; color: #444; line-height: 2;">
+      <li><strong>Debt:</strong> $350K mortgage → The bank gets paid first if you sell. Fixed interest rate. Non-negotiable.</li>
+      <li><strong>Equity:</strong> $150K → Your ownership stake. If the house appreciates to $700K, YOUR equity grew from $150K → $350K. That's the upside.</li>
+    </ul>
+  </div>
+
+  <h2>The Capital Stack</h2>
+  <p>In any deal, capital is layered by <em>risk and priority</em>. Think of it as a waterfall — money flows down, and lower layers only receive proceeds after upper layers are paid.</p>
+
+  <div class="stack">
+    <div class="stack-layer" style="background:#1a3a2e; color:#fff;">
+      <div>
+        <strong>Senior Secured Debt</strong><br>
+        <span style="font-size:12px;color:#aaa;">Banks, institutional lenders. Lowest risk. Paid first.</span>
+      </div>
+      <span class="pct" style="color:var(--gold-light);">40–50%</span>
+    </div>
+    <div class="stack-layer" style="background:#2a5240; color:#fff;">
+      <div>
+        <strong>Junior / Subordinated Debt</strong><br>
+        <span style="font-size:12px;color:#ccc;">Higher yield. Paid after senior debt.</span>
+      </div>
+      <span class="pct" style="color:var(--gold-light);">10–20%</span>
+    </div>
+    <div class="stack-layer" style="background:#c9a84c; color:#1a1a1a;">
+      <div>
+        <strong>Mezzanine / Preferred Equity</strong><br>
+        <span style="font-size:12px;color:#555;">Hybrid of debt and equity. Pays a coupon + may convert to equity.</span>
+      </div>
+      <span class="pct">5–15%</span>
+    </div>
+    <div class="stack-layer" style="background:#b85c38; color:#fff;">
+      <div>
+        <strong>Common Equity (PE Firm)</strong><br>
+        <span style="font-size:12px;color:#ffccb8;">Highest risk. Paid last. But highest upside.</span>
+      </div>
+      <span class="pct">30–40%</span>
+    </div>
+  </div>
+  <p style="font-size:13px;color:var(--slate);">↑ Lowest risk / lowest return &nbsp;&nbsp;&nbsp;&nbsp; ↓ Highest risk / highest return</p>
+
+  <h2>Why PE Firms Use Debt (Leverage)</h2>
+  <p>Using debt to amplify returns on equity is called <strong>leverage</strong>. It's the same concept as your mortgage — you use the bank's money to buy a larger asset than you could afford alone, and you keep all the upside appreciation.</p>
+
+  <div class="math-box">
+    <h4>Leverage Amplifies Returns — Example</h4>
+    <div class="math-row"><span class="label">Company acquired for</span><span class="val">$100M</span></div>
+    <div class="math-row"><span class="label">PE firm puts in equity (30%)</span><span class="val negative">$30M</span></div>
+    <div class="math-row"><span class="label">Debt borrowed (70%)</span><span class="val negative">$70M</span></div>
+    <div class="math-row" style="margin-top:16px"><span class="label">Company sold 5 years later</span><span class="val">$160M</span></div>
+    <div class="math-row"><span class="label">Debt repaid</span><span class="val negative">−$70M</span></div>
+    <div class="math-row total"><span class="label">PE firm gets back</span><span class="val positive">$90M</span></div>
+    <div class="math-row"><span class="label" style="font-size:13px">Return on $30M invested</span><span class="val positive" style="font-size:15px">3× = 200% gain</span></div>
+  </div>
+
+  <p>Without leverage (all equity), that same $100M → $160M deal yields only a 60% gain on the $100M invested. Leverage turns 60% into 200%.</p>
+
+  <div class="callout">
+    <strong>The Caveat:</strong>
+    <p>Leverage works both ways. If the company declines in value, the debt still needs to be repaid — and equity can be wiped out entirely. This is why PE firms are selective about the businesses they buy.</p>
+  </div>
+</div>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<div id="howworks" class="section">
+  <p class="subtitle">Module 3</p>
+  <h1>How a PE Deal Works</h1>
+  <div class="rule"></div>
+
+  <h2>The Fund Lifecycle</h2>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot">1</div>
+      <div class="tl-content">
+        <h4>Fundraising (Year 0–2)</h4>
+        <p>The GP raises a blind pool fund. LPs commit capital without knowing exactly which companies will be acquired. A typical fund: $1B–$20B. LPs don't hand over cash immediately — they make a "commitment" and send money when called.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">2</div>
+      <div class="tl-content">
+        <h4>Investment Period (Year 1–5)</h4>
+        <p>The GP sources, evaluates, and acquires companies. They "call" capital from LPs as deals close. Typically 4–8 companies per fund. Extensive due diligence: financial, legal, operational, market.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">3</div>
+      <div class="tl-content">
+        <h4>Hold / Value Creation (Year 2–7)</h4>
+        <p>The PE firm actively manages its portfolio companies. This is where the work happens: cutting costs, growing revenue, replacing management, making add-on acquisitions, expanding markets.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">4</div>
+      <div class="tl-content">
+        <h4>Exit (Year 4–10)</h4>
+        <p>The PE firm sells its investment and returns cash to LPs. Exit routes: IPO, sale to another company (strategic buyer), or sale to another PE firm (secondary buyout).</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>The LBO — Leveraged Buyout</h2>
+  <p>The most iconic PE deal structure. The company's own assets and future cash flows are used as collateral to borrow most of the purchase price.</p>
+
+  <div class="flow">
+    <div style="text-align:center;flex:1;min-width:110px">
+      <div class="flow-node">PE Firm<br>raises fund</div>
+      <div class="flow-label">GPs + LPs</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div style="text-align:center;flex:1;min-width:110px">
+      <div class="flow-node gold">Creates<br>NewCo (SPV)</div>
+      <div class="flow-label">Acquisition vehicle</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div style="text-align:center;flex:1;min-width:110px">
+      <div class="flow-node">Borrows<br>Debt</div>
+      <div class="flow-label">Banks / credit funds</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div style="text-align:center;flex:1;min-width:110px">
+      <div class="flow-node rust">Acquires<br>Target Co.</div>
+      <div class="flow-label">Equity + debt combined</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div style="text-align:center;flex:1;min-width:110px">
+      <div class="flow-node">Exit &<br>Distribute</div>
+      <div class="flow-label">Proceeds to investors</div>
+    </div>
+  </div>
+
+  <div class="example">
+    <span class="tag">Real Example</span>
+    <h4>KKR's Acquisition of RJR Nabisco (1989)</h4>
+    <p>KKR acquired RJR Nabisco for $25 billion — then the largest LBO in history. KKR put in roughly $1.5B in equity; the rest was debt. The acquisition became the subject of "Barbarians at the Gate," a famous book and film. The deal exemplified how leverage could be used to take over even massive public corporations.</p>
+  </div>
+
+  <h2>Value Creation Levers</h2>
+  <p>PE firms make money three ways after acquiring a company:</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="icon">📈</div>
+      <h4>Revenue Growth</h4>
+      <p>Expand into new markets, launch new products, improve sales execution, pursue strategic acquisitions (bolt-ons).</p>
+    </div>
+    <div class="card">
+      <div class="icon">✂️</div>
+      <h4>Margin Improvement</h4>
+      <p>Cut unnecessary costs, renegotiate supplier contracts, consolidate facilities, reduce headcount. Improve EBITDA margin.</p>
+    </div>
+    <div class="card">
+      <div class="icon">⚖️</div>
+      <h4>Multiple Expansion</h4>
+      <p>Buy at 7× EBITDA, sell at 10× EBITDA. Market conditions or improved quality of the business command a higher price multiple at exit.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== RETURNS ===================== -->
+<div id="returns" class="section">
+  <p class="subtitle">Module 4</p>
+  <h1>How PE Makes Money</h1>
+  <div class="rule"></div>
+
+  <h2>Two Revenue Streams for the GP</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="icon">🗓️</div>
+      <h4>Management Fee</h4>
+      <p>Typically <strong>2% of committed capital per year</strong>. On a $1B fund, that's $20M/year — paid regardless of performance. Covers salaries, operations, deal costs. Often steps down to 1.5% in later years.</p>
+    </div>
+    <div class="card">
+      <div class="icon">💰</div>
+      <h4>Carried Interest ("Carry")</h4>
+      <p>The GP's share of profits — typically <strong>20% of gains</strong> above a minimum return threshold (the "hurdle rate," usually 8%). This is the real money. On a $500M profit, carry = $100M to the GP.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Why Carry Matters Legally:</strong>
+    <p>Carried interest has long been taxed as long-term capital gains (~20%) rather than ordinary income (~37%) in the U.S. — a point of ongoing political and tax law debate. Understanding this matters if you encounter fund agreements or LP reporting in your fiduciary work.</p>
+  </div>
+
+  <h2>How LP Returns Are Calculated</h2>
+
+  <div class="stat-row">
+    <div class="stat">
+      <span class="num">IRR</span>
+      <span class="label">Internal Rate of Return<br>Annualized % return</span>
+    </div>
+    <div class="stat">
+      <span class="num">MOIC</span>
+      <span class="label">Multiple on Invested Capital<br>"We returned 2.5× what you put in"</span>
+    </div>
+    <div class="stat">
+      <span class="num">DPI</span>
+      <span class="label">Distributions to Paid-In<br>Cash actually returned so far</span>
+    </div>
+    <div class="stat">
+      <span class="num">TVPI</span>
+      <span class="label">Total Value to Paid-In<br>Cash + remaining paper value</span>
+    </div>
+  </div>
+
+  <h2>Full Deal Walkthrough</h2>
+
+  <div class="math-box">
+    <h4>Example: PE Fund Acquires a Consumer Brand</h4>
+    <div class="math-row"><span class="label">Fund Size</span><span class="val">$1 Billion</span></div>
+    <div class="math-row"><span class="label">Company Purchased</span><span class="val">$400M (8× EBITDA)</span></div>
+    <div class="math-row"><span class="label">Equity from Fund (35%)</span><span class="val negative">$140M</span></div>
+    <div class="math-row"><span class="label">Debt (65%)</span><span class="val negative">$260M borrowed</span></div>
+    <hr style="margin:12px 0;border:none;border-top:1px dashed #ccc;">
+    <div class="math-row"><span class="label">Hold period</span><span class="val">5 years</span></div>
+    <div class="math-row"><span class="label">EBITDA grew from $50M → $80M</span><span class="val positive">+60% earnings growth</span></div>
+    <div class="math-row"><span class="label">Exit multiple expanded 8× → 11×</span><span class="val positive">Multiple expansion</span></div>
+    <div class="math-row"><span class="label">Debt paid down from $260M → $170M</span><span class="val positive">Debt paydown</span></div>
+    <hr style="margin:12px 0;border:none;border-top:1px dashed #ccc;">
+    <div class="math-row"><span class="label">Exit sale price (11× × $80M)</span><span class="val">$880M</span></div>
+    <div class="math-row"><span class="label">Debt repaid</span><span class="val negative">−$170M</span></div>
+    <div class="math-row total"><span class="label">Equity proceeds</span><span class="val positive">$710M on $140M invested</span></div>
+    <div class="math-row"><span class="label">MOIC</span><span class="val positive">5.1×</span></div>
+    <div class="math-row"><span class="label">IRR (approx.)</span><span class="val positive">~38% annualized</span></div>
+  </div>
+
+  <div class="math-box" style="margin-top:20px">
+    <h4>Fee Distribution on This Deal</h4>
+    <div class="math-row"><span class="label">Total equity gain</span><span class="val">$570M profit (710 − 140)</span></div>
+    <div class="math-row"><span class="label">LP hurdle (8% × 5 years × $140M)</span><span class="val negative">~$56M first</span></div>
+    <div class="math-row"><span class="label">Remaining gains</span><span class="val">$514M</span></div>
+    <div class="math-row"><span class="label">GP carry (20%)</span><span class="val negative">$103M → GP</span></div>
+    <div class="math-row total"><span class="label">LP net proceeds</span><span class="val positive">$607M back on $140M in</span></div>
+  </div>
+</div>
+
+<!-- ===================== TYPES ===================== -->
+<div id="types" class="section">
+  <p class="subtitle">Module 5</p>
+  <h1>PE Strategies & Firm Types</h1>
+  <div class="rule"></div>
+
+  <p>Not all PE is the same. The strategy varies by the stage and type of company targeted.</p>
+
+  <table>
+    <thead><tr><th>Strategy</th><th>Target</th><th>Use of Debt</th><th>Key Names</th></tr></thead>
+    <tbody>
+      <tr><td>Leveraged Buyout (LBO)</td><td>Mature companies, stable cash flows</td><td>High (60–70%)</td><td>Blackstone, KKR, Carlyle</td></tr>
+      <tr><td>Growth Equity</td><td>Expanding businesses, minority stake</td><td>Low</td><td>General Atlantic, TA Associates</td></tr>
+      <tr><td>Venture Capital</td><td>Early-stage startups</td><td>None</td><td>Sequoia, a16z, Bessemer</td></tr>
+      <tr><td>Distressed / Turnaround</td><td>Struggling or bankrupt companies</td><td>Medium (complex)</td><td>Apollo, Oaktree</td></tr>
+      <tr><td>Real Assets / Infrastructure</td><td>Physical assets, utilities, real estate</td><td>Medium–High</td><td>Brookfield, Macquarie</td></tr>
+      <tr><td>Secondary PE</td><td>Buying LP interests from other investors</td><td>Low</td><td>Ardian, Lexington Partners</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relevance to Your Work — Private Bank / Fiduciary</h2>
+
+  <p>As fiduciary counsel and wealth advisor counsel, PE shows up in your world in several concrete ways:</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="icon">⚖️</div>
+      <h4>Trust Investments</h4>
+      <p>UHNW clients may hold PE fund LP interests in irrevocable trusts. Prudent investor standards apply. Fiduciary must evaluate illiquidity, concentration risk, and fit within investment policy.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🎁</div>
+      <h4>Estate Planning</h4>
+      <p>PE interests (especially carried interest, partnership stakes) have unique estate planning implications — valuation discounts, transfer tax treatment, and step-up-in-basis issues on death.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🏛️</div>
+      <h4>Philanthropic Solutions</h4>
+      <p>Clients donating PE interests to charity or DAFs create specialized legal questions: valuation of illiquid assets, appraisal requirements, unrelated business taxable income (UBTI) for tax-exempt donees.</p>
+    </div>
+    <div class="card">
+      <div class="icon">📄</div>
+      <h4>Fund Docs & LPAs</h4>
+      <p>Limited Partnership Agreements govern LP rights — capital calls, distributions, clawbacks, key man clauses, governance. These are the primary legal instruments you'd review in a fiduciary capacity.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Key Terms to Know in LP Agreements:</strong>
+    <p><span class="pill" style="background:#3a5a4e;color:#e0f0e8;">Capital Call</span> <span class="pill" style="background:#3a5a4e;color:#e0f0e8;">Distributions</span> <span class="pill" style="background:#3a5a4e;color:#e0f0e8;">Clawback</span> <span class="pill" style="background:#3a5a4e;color:#e0f0e8;">Hurdle Rate</span> <span class="pill" style="background:#3a5a4e;color:#e0f0e8;">Waterfall</span> <span class="pill" style="background:#3a5a4e;color:#e0f0e8;">Key Man Clause</span> <span class="pill" style="background:#3a5a4e;color:#e0f0e8;">UBTI</span> <span class="pill" style="background:#3a5a4e;color:#e0f0e8;">J-Curve</span> <span class="pill" style="background:#3a5a4e;color:#e0f0e8;">NAV</span></p>
+  </div>
+
+  <h2>The J-Curve Phenomenon</h2>
+  <p>PE fund returns follow a predictable pattern called the J-Curve: returns are <em>negative in early years</em> (management fees + investments before value creation), then climb steeply as exits occur.</p>
+  <div style="background:#fff;border:1px solid #ddd;padding:24px;border-radius:4px;margin-top:8px;">
+    <svg viewBox="0 0 400 180" style="width:100%;max-width:480px;display:block;margin:0 auto">
+      <line x1="40" y1="20" x2="40" y2="160" stroke="#888" stroke-width="1.5"/>
+      <line x1="40" y1="100" x2="380" y2="100" stroke="#888" stroke-width="1.5"/>
+      <text x="44" y="173" font-size="10" fill="#888">Year 0</text>
+      <text x="104" y="173" font-size="10" fill="#888">2</text>
+      <text x="164" y="173" font-size="10" fill="#888">4</text>
+      <text x="224" y="173" font-size="10" fill="#888">6</text>
+      <text x="284" y="173" font-size="10" fill="#888">8</text>
+      <text x="344" y="173" font-size="10" fill="#888">10</text>
+      <text x="6" y="104" font-size="10" fill="#888">0%</text>
+      <text x="2" y="40" font-size="10" fill="#2a7a4e">+</text>
+      <text x="2" y="145" font-size="10" fill="#b85c38">−</text>
+      <path d="M40,100 Q80,140 120,148 Q160,154 180,148 Q220,130 260,80 Q300,40 360,28"
+            fill="none" stroke="#c9a84c" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="120" cy="148" r="4" fill="#b85c38"/>
+      <text x="122" y="162" font-size="9" fill="#b85c38">Trough</text>
+      <circle cx="360" cy="28" r="4" fill="#2a7a4e"/>
+      <text x="310" y="22" font-size="9" fill="#2a7a4e">Peak returns at exit</text>
+      <text x="55" y="135" font-size="9" fill="#888">Fees + capital</text>
+      <text x="55" y="146" font-size="9" fill="#888">deployed, no exits</text>
+    </svg>
+  </div>
+  <p style="font-size:13px;color:var(--slate);margin-top:8px;">This is why fiduciaries must evaluate PE investments differently from liquid assets — the paper losses in years 1–3 are normal and expected, not a signal of poor performance.</p>
+</div>
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('visible');
+    event.target.classList.add('active');
+    window.scrollTo({ top: 56, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
