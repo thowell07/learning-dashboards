@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Public Company Stock — A Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #3d3d3d;
+    --ink-muted: #6b6b6b;
+    --cream: #faf8f4;
+    --cream-dark: #f0ece4;
+    --cream-darker: #e4dfd5;
+    --accent: #c45028;
+    --accent-light: #f7ebe6;
+    --accent-hover: #a8421f;
+    --teal: #1a6b5a;
+    --teal-light: #e6f2ef;
+    --blue: #2b5a8c;
+    --blue-light: #e8eff6;
+    --gold: #a68b2c;
+    --gold-light: #f5f1e0;
+    --border: #d4cfc5;
+    --border-light: #e8e4db;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.10);
+    --radius: 8px;
+    --radius-lg: 12px;
+    --max-w: 920px;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --transition: 0.25s ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── HEADER ─── */
+  .site-header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .header-top .kicker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .header-top h1 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+  .header-top .subtitle {
+    font-size: 15px;
+    color: rgba(250,248,244,0.55);
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  /* ─── TABS ─── */
+  .tab-bar {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 14px 18px;
+    background: none;
+    border: none;
+    color: rgba(250,248,244,0.45);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+    position: relative;
+  }
+  .tab-btn:hover { color: rgba(250,248,244,0.75); }
+  .tab-btn.active {
+    color: var(--cream);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ─── CONTENT ─── */
+  .content-wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  .tab-panel { display: none; animation: fadeIn 0.35s ease; }
+  .tab-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── TYPOGRAPHY ─── */
+  h2 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  h3 {
+    font-family: var(--font-display);
+    font-size: 21px;
+    color: var(--ink);
+    margin: 32px 0 12px;
+  }
+  h4 {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--ink-soft);
+    margin: 28px 0 10px;
+  }
+  .lead {
+    font-size: 19px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+  p { margin-bottom: 16px; color: var(--ink-soft); }
+  strong { color: var(--ink); font-weight: 600; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition);
+  }
+  .card:hover { box-shadow: var(--shadow-md); }
+  .card h3 { margin-top: 0; }
+  .card p:last-child { margin-bottom: 0; }
+
+  .card-accent {
+    border-left: 4px solid var(--accent);
+    background: var(--accent-light);
+  }
+  .card-accent h3, .card-accent strong { color: var(--accent-hover); }
+  .card-accent p { color: var(--ink-soft); }
+
+  .card-teal {
+    border-left: 4px solid var(--teal);
+    background: var(--teal-light);
+  }
+  .card-teal h3, .card-teal strong { color: var(--teal); }
+  .card-teal p { color: var(--ink-soft); }
+
+  .card-blue {
+    border-left: 4px solid var(--blue);
+    background: var(--blue-light);
+  }
+  .card-blue h3, .card-blue strong { color: var(--blue); }
+  .card-blue p { color: var(--ink-soft); }
+
+  .card-gold {
+    border-left: 4px solid var(--gold);
+    background: var(--gold-light);
+  }
+  .card-gold h3, .card-gold strong { color: var(--gold); }
+  .card-gold p { color: var(--ink-soft); }
+
+  /* ─── DIAGRAM BOXES ─── */
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 28px 0;
+  }
+  .flow-step {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    text-align: center;
+    min-width: 140px;
+    flex: 0 1 auto;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .flow-step:hover { border-color: var(--accent); box-shadow: var(--shadow-md); }
+  .flow-step .step-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .flow-step .step-label {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .flow-step .step-desc {
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+  .flow-arrow {
+    font-size: 22px;
+    color: var(--border);
+    padding: 0 6px;
+    flex-shrink: 0;
+  }
+
+  /* ─── TABLES ─── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-light);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  thead th {
+    background: var(--ink);
+    color: var(--cream);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 14px 16px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--ink-soft);
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) { background: var(--cream); }
+  tbody tr:nth-child(odd) { background: #fff; }
+  tbody tr:hover { background: var(--cream-dark); }
+  td .mono {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--teal);
+    font-weight: 500;
+  }
+
+  /* ─── WORKED EXAMPLE ─── */
+  .example-box {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin: 24px 0;
+  }
+  .example-header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 14px 24px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .example-body {
+    padding: 24px;
+  }
+  .example-body p { color: var(--ink-soft); }
+  .example-body .calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border-light);
+    font-size: 15px;
+  }
+  .example-body .calc-row:last-child { border-bottom: none; }
+  .calc-label { color: var(--ink-soft); }
+  .calc-value {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    color: var(--ink);
+    font-size: 15px;
+  }
+  .calc-value.highlight {
+    color: var(--accent);
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .calc-divider {
+    border-top: 2px solid var(--ink);
+    margin: 4px 0;
+  }
+
+  /* ─── GRID ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 700px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .flow-diagram { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+
+  /* ─── STAT CARD ─── */
+  .stat-card {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-card .stat-value {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--ink);
+  }
+  .stat-card .stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--ink-muted);
+    margin-top: 4px;
+    font-weight: 600;
+  }
+
+  /* ─── CALLOUT ─── */
+  .callout {
+    padding: 20px 24px;
+    border-radius: var(--radius);
+    margin: 20px 0;
+    font-size: 15px;
+  }
+  .callout.fiduciary {
+    background: var(--teal-light);
+    border: 1px solid rgba(26,107,90,0.2);
+    color: var(--ink-soft);
+  }
+  .callout.fiduciary strong { color: var(--teal); }
+  .callout .callout-title {
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  /* ─── TOGGLE ─── */
+  .toggle-group { margin: 20px 0; }
+  .toggle-item { border-bottom: 1px solid var(--border-light); }
+  .toggle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    cursor: pointer;
+    user-select: none;
+    transition: color var(--transition);
+  }
+  .toggle-header:hover { color: var(--accent); }
+  .toggle-header h3 { margin: 0; font-size: 18px; pointer-events: none; }
+  .toggle-arrow {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+    color: var(--ink-muted);
+  }
+  .toggle-item.open .toggle-arrow { transform: rotate(180deg); }
+  .toggle-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 0;
+  }
+  .toggle-item.open .toggle-body {
+    max-height: 2000px;
+    padding: 0 0 20px;
+  }
+
+  /* ─── PILL / TAG ─── */
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    margin-right: 6px;
+  }
+  .pill-primary { background: var(--accent-light); color: var(--accent); }
+  .pill-secondary { background: var(--teal-light); color: var(--teal); }
+  .pill-market { background: var(--blue-light); color: var(--blue); }
+
+  /* ─── SECTION SEPARATOR ─── */
+  .section-rule {
+    border: none;
+    border-top: 1px solid var(--border-light);
+    margin: 36px 0;
+  }
+
+  /* ─── FOOTER ─── */
+  .site-footer {
+    text-align: center;
+    padding: 30px 24px;
+    font-size: 12px;
+    color: var(--ink-muted);
+    border-top: 1px solid var(--border-light);
+    max-width: var(--max-w);
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="kicker">Learning Dashboard</div>
+    <h1>Public Company Stock</h1>
+    <div class="subtitle">IPOs, trading mechanics, share structure, and how companies raise capital in public markets</div>
+  </div>
+  <nav class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="ipo">The IPO</button>
+    <button class="tab-btn" data-tab="trading">How Trading Works</button>
+    <button class="tab-btn" data-tab="shares">Share Structure</button>
+    <button class="tab-btn" data-tab="money">Following the Money</button>
+    <button class="tab-btn" data-tab="examples">Worked Examples</button>
+    <button class="tab-btn" data-tab="nuances">Nuances</button>
+    <button class="tab-btn" data-tab="glossary">Glossary</button>
+  </nav>
+</header>
+
+<main class="content-wrap">
+
+<!-- ═══════════════════════ OVERVIEW ═══════════════════════ -->
+<section class="tab-panel active" id="panel-overview">
+  <h2>Why Companies Go Public</h2>
+  <p class="lead">A public company is one whose shares trade on a stock exchange, where anyone — from billion-dollar pension funds to an individual with a brokerage app — can buy a fractional ownership stake. Going public is the most consequential capital-markets decision a company can make.</p>
+
+  <div class="grid-3">
+    <div class="stat-card">
+      <div class="stat-value">~4,000</div>
+      <div class="stat-label">U.S. public companies</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">$50T+</div>
+      <div class="stat-label">Total U.S. market cap</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">~150</div>
+      <div class="stat-label">IPOs per year (avg)</div>
+    </div>
+  </div>
+
+  <h3>The Core Idea</h3>
+  <p>A company issues <strong>shares of stock</strong> — each share is a tiny slice of ownership. When a company "goes public," it sells shares to outside investors for the first time through an <strong>Initial Public Offering (IPO)</strong>. After that, those shares trade on an exchange (like NYSE or NASDAQ) between buyers and sellers — the company itself usually isn't directly involved in daily trading.</p>
+
+  <div class="card card-accent">
+    <h3>The Critical Distinction</h3>
+    <p>There are two different markets at play, and keeping them separate is essential to understanding how stocks work:</p>
+    <p><strong>Primary Market:</strong> The company sells <em>new</em> shares directly to investors and receives the cash. This happens at the IPO and in follow-on offerings. This is how companies raise capital.</p>
+    <p><strong>Secondary Market:</strong> Investors trade <em>existing</em> shares among themselves on the stock exchange. The company gets zero dollars from these transactions. When you buy Apple stock on your phone, Apple doesn't see a dime — you're buying from another investor who's selling.</p>
+  </div>
+
+  <h3>Why Go Public?</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h3>🏦 Raise Capital</h3>
+      <p>The most straightforward reason. An IPO can raise hundreds of millions or billions of dollars that the company uses for growth, acquisitions, R&D, or paying down debt.</p>
+    </div>
+    <div class="card">
+      <h3>💰 Liquidity for Insiders</h3>
+      <p>Founders, early employees, and venture capital investors finally get a way to convert their ownership into cash. Before the IPO, their shares are essentially illiquid.</p>
+    </div>
+    <div class="card">
+      <h3>📈 Currency for Deals</h3>
+      <p>Public stock can be used as "currency" to acquire other companies. Paying with stock avoids draining cash reserves and can be tax-efficient for sellers.</p>
+    </div>
+    <div class="card">
+      <h3>🏷️ Prestige & Visibility</h3>
+      <p>Being listed on a major exchange signals credibility. It attracts talent (via stock options), customers, and strategic partners. It's a badge of legitimacy.</p>
+    </div>
+  </div>
+
+  <div class="callout fiduciary">
+    <div class="callout-title">🏛️ Fiduciary Lens</div>
+    <strong>Why this matters for wealth advisory:</strong> High-net-worth clients often hold concentrated positions in a single public stock — either from founding a company, executive compensation, or an inheritance. Understanding share structure and trading mechanics is essential for advising on diversification, lockup periods, insider trading rules, and estate planning strategies like GRATs and charitable remainder trusts.
+  </div>
+</section>
+
+<!-- ═══════════════════════ IPO ═══════════════════════ -->
+<section class="tab-panel" id="panel-ipo">
+  <h2>The Initial Public Offering</h2>
+  <p class="lead">An IPO is the process by which a private company sells shares to public investors for the first time. It's complex, expensive, and typically takes 6–12 months from start to trading day.</p>
+
+  <h3>The IPO Process — Step by Step</h3>
+  <div class="flow-diagram">
+    <div class="flow-step">
+      <div class="step-num">Step 1</div>
+      <div class="step-label">Hire Underwriters</div>
+      <div class="step-desc">Company selects investment banks (Goldman, Morgan Stanley, etc.) to manage the offering</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Step 2</div>
+      <div class="step-label">Due Diligence & Filing</div>
+      <div class="step-desc">Prepare S-1 registration statement for the SEC. Public financial disclosure begins.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Step 3</div>
+      <div class="step-label">Roadshow</div>
+      <div class="step-desc">Executives pitch institutional investors across the country to gauge demand</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Step 4</div>
+      <div class="step-label">Pricing</div>
+      <div class="step-desc">Underwriters set the IPO price based on demand. Shares are allocated to investors.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Step 5</div>
+      <div class="step-label">Trading Begins</div>
+      <div class="step-desc">Shares open on the exchange. Market price is set by supply and demand.</div>
+    </div>
+  </div>
+
+  <h3>Key Players in an IPO</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Player</th><th>Role</th><th>How They're Compensated</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Issuing Company</strong></td><td>Sells newly created shares; receives the capital raised</td><td>The IPO proceeds (minus fees)</td></tr>
+        <tr><td><strong>Lead Underwriter(s)</strong></td><td>Manages the entire process — pricing, allocation, stabilization</td><td>Underwriting spread (typically 3–7% of proceeds)</td></tr>
+        <tr><td><strong>SEC</strong></td><td>Reviews S-1 filing; ensures adequate disclosure</td><td>Filing fees</td></tr>
+        <tr><td><strong>Institutional Investors</strong></td><td>Buy the majority of IPO shares at the offering price</td><td>Potential gains if stock rises after IPO</td></tr>
+        <tr><td><strong>Retail Investors</strong></td><td>Buy shares once trading opens on the exchange</td><td>Same — buy/sell at market price</td></tr>
+        <tr><td><strong>Selling Shareholders</strong></td><td>Existing owners (founders, VCs) who sell some of their shares in the IPO</td><td>Cash from selling their stake</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Primary vs. Secondary Shares in an IPO</h3>
+  <div class="card card-teal">
+    <p>Most IPOs include a mix of <strong>primary shares</strong> (newly issued by the company — proceeds go to the company) and <strong>secondary shares</strong> (sold by existing shareholders — proceeds go to those individual sellers, not the company).</p>
+    <p>This distinction matters: if an IPO raises $500M but $200M comes from secondary shares, the company itself only receives $300M. The other $200M goes into the pockets of the selling insiders.</p>
+  </div>
+
+  <h3>The Underwriting Spread — Where Banks Make Money</h3>
+  <div class="example-box">
+    <div class="example-header">💲 Worked Example — Underwriter Fees</div>
+    <div class="example-body">
+      <p>Suppose a company IPOs at <strong>$20/share</strong> and sells <strong>25 million new shares</strong>.</p>
+      <div class="calc-row"><span class="calc-label">Gross IPO Proceeds</span><span class="calc-value">25M × $20 = $500,000,000</span></div>
+      <div class="calc-row"><span class="calc-label">Underwriting spread (7%)</span><span class="calc-value">$500M × 0.07 = $35,000,000</span></div>
+      <div class="calc-divider"></div>
+      <div class="calc-row"><span class="calc-label">Net proceeds to the company</span><span class="calc-value highlight">$465,000,000</span></div>
+      <p style="margin-top:14px; font-size:14px;">The lead underwriter and syndicate banks split that $35M fee. This is why IPO underwriting is one of the most lucrative business lines in investment banking.</p>
+    </div>
+  </div>
+
+  <h3>Alternatives to a Traditional IPO</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Direct Listing</h3>
+      <p><span class="pill pill-secondary">No new shares</span></p>
+      <p>Existing shares begin trading on an exchange without underwriters allocating shares or setting a price. No new capital is raised. Used by Spotify (2018) and Coinbase (2021). Cheaper but riskier — no price support from underwriters.</p>
+    </div>
+    <div class="card">
+      <h3>SPAC Merger</h3>
+      <p><span class="pill pill-market">Reverse merger</span></p>
+      <p>A "blank check" shell company IPOs first, then merges with a private company — taking it public through the back door. Popular in 2020–2021, but fell out of favor due to poor performance and SEC scrutiny.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ TRADING ═══════════════════════ -->
+<section class="tab-panel" id="panel-trading">
+  <h2>How Stock Trading Works</h2>
+  <p class="lead">Once shares are listed on an exchange, they trade on the secondary market. Here's the full chain — from the moment you tap "buy" to the moment you actually own the shares.</p>
+
+  <h3>The Anatomy of a Trade</h3>
+  <div class="flow-diagram">
+    <div class="flow-step">
+      <div class="step-num">You</div>
+      <div class="step-label">Place Order</div>
+      <div class="step-desc">Market order, limit order, etc. via your brokerage</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Broker</div>
+      <div class="step-label">Routes Order</div>
+      <div class="step-desc">Schwab, Fidelity, etc. sends it to an exchange or market maker</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Exchange</div>
+      <div class="step-label">Matches Orders</div>
+      <div class="step-desc">NYSE / NASDAQ matches your buy with a seller's sell</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Clearinghouse</div>
+      <div class="step-label">Settles Trade</div>
+      <div class="step-desc">DTCC confirms trade. Settlement: T+1 (next business day)</div>
+    </div>
+  </div>
+
+  <h3>Order Types</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Order Type</th><th>How It Works</th><th>When to Use It</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Market Order</strong></td><td>Buy/sell immediately at the best available price</td><td>You want speed and certainty of execution</td></tr>
+        <tr><td><strong>Limit Order</strong></td><td>Buy/sell only at your specified price or better</td><td>You want price control; willing to wait</td></tr>
+        <tr><td><strong>Stop Order</strong></td><td>Becomes a market order once a trigger price is hit</td><td>Protecting against losses (stop-loss)</td></tr>
+        <tr><td><strong>Stop-Limit</strong></td><td>Becomes a limit order once a trigger price is hit</td><td>Loss protection with price floor</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>The Bid-Ask Spread</h3>
+  <div class="card card-blue">
+    <p>At any given moment, there's a <strong>bid price</strong> (the highest price a buyer is willing to pay) and an <strong>ask price</strong> (the lowest price a seller will accept). The difference is the <strong>spread</strong>.</p>
+    <p>For a highly liquid stock like Apple, the spread might be <span class="mono">$0.01</span>. For a thinly traded small-cap stock, it could be <span class="mono">$0.25</span> or more. The spread is essentially a transaction cost you pay every time you trade.</p>
+    <p><strong>Example:</strong> If AAPL has a bid of <span class="mono">$189.50</span> and an ask of <span class="mono">$189.51</span>, a market buy fills at $189.51, and a market sell fills at $189.50. The market maker pockets the $0.01 difference.</p>
+  </div>
+
+  <h3>Who Sets the Price?</h3>
+  <p>Stock prices are set purely by <strong>supply and demand</strong> in real time. If more people want to buy a stock than sell it, the price rises. If more want to sell, it falls. There's no central authority "deciding" the price — it's the aggregate outcome of millions of individual decisions.</p>
+
+  <p>What drives those decisions includes earnings reports, macroeconomic data, interest rates, sector trends, analyst ratings, company news, and investor sentiment. On any given day, a stock's price might move on hard data, rumor, or pure momentum.</p>
+
+  <h3>Market Hours & After-Hours</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h3>🔔 Regular Session</h3>
+      <p><strong>9:30 AM – 4:00 PM ET</strong></p>
+      <p>The primary trading window. Highest liquidity and tightest spreads. This is when most volume occurs.</p>
+    </div>
+    <div class="card">
+      <h3>🌙 Extended Hours</h3>
+      <p><strong>Pre-market:</strong> 4:00 AM – 9:30 AM ET<br><strong>After-hours:</strong> 4:00 PM – 8:00 PM ET</p>
+      <p>Lower liquidity, wider spreads, more volatility. Often reacts to earnings releases after the close.</p>
+    </div>
+  </div>
+
+  <h3>Settlement: T+1</h3>
+  <p>When you execute a trade, it doesn't fully settle until <strong>T+1</strong> — one business day after the trade date. During this window, the clearinghouse (DTCC) handles the behind-the-scenes transfer of cash and shares between buyer and seller. Before May 2024, settlement was T+2; the SEC shortened it to reduce counterparty risk.</p>
+</section>
+
+<!-- ═══════════════════════ SHARES ═══════════════════════ -->
+<section class="tab-panel" id="panel-shares">
+  <h2>Share Structure</h2>
+  <p class="lead">Understanding the different ways shares are counted and classified is essential — these concepts show up in every earnings report, SEC filing, and valuation analysis.</p>
+
+  <h3>The Share Count Hierarchy</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Term</th><th>Definition</th><th>Relationship</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Authorized Shares</strong></td><td>The maximum number of shares a company is legally allowed to issue, set in its charter</td><td>The ceiling — always ≥ issued shares</td></tr>
+        <tr><td><strong>Issued Shares</strong></td><td>Shares actually created and distributed (either held by investors or bought back by the company)</td><td>Authorized ≥ <strong>Issued</strong> ≥ Outstanding</td></tr>
+        <tr><td><strong>Outstanding Shares</strong></td><td>Shares currently held by all investors — institutions, insiders, retail. Excludes treasury shares.</td><td>The number used to calculate market cap</td></tr>
+        <tr><td><strong>Treasury Shares</strong></td><td>Shares the company has bought back from the market. They still exist but have no voting rights and receive no dividends.</td><td>Issued − Outstanding = Treasury</td></tr>
+        <tr><td><strong>Float</strong></td><td>The subset of outstanding shares available for public trading. Excludes shares locked up by insiders, officers, and restricted stock.</td><td>Float ≤ Outstanding</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="example-box">
+    <div class="example-header">📊 Worked Example — Apple's Share Structure (Illustrative Approximation)</div>
+    <div class="example-body">
+      <div class="calc-row"><span class="calc-label">Authorized Shares</span><span class="calc-value">50.4 billion</span></div>
+      <div class="calc-row"><span class="calc-label">Issued Shares (total ever created)</span><span class="calc-value">~24.3 billion (cumulative)</span></div>
+      <div class="calc-row"><span class="calc-label">Treasury Shares (bought back)</span><span class="calc-value">~8.9 billion</span></div>
+      <div class="calc-divider"></div>
+      <div class="calc-row"><span class="calc-label">Outstanding Shares</span><span class="calc-value highlight">~15.4 billion</span></div>
+      <div class="calc-row"><span class="calc-label">Market Cap (at ~$190/share)</span><span class="calc-value highlight">~$2.93 trillion</span></div>
+      <p style="margin-top:14px; font-size:14px;">Apple has been aggressively buying back its own shares for over a decade — spending $600B+ on buybacks. This reduces the outstanding share count, which increases earnings per share (EPS) and concentrates ownership among remaining shareholders.</p>
+    </div>
+  </div>
+
+  <h3>Share Classes</h3>
+  <p>Some companies issue <strong>multiple classes of stock</strong> with different voting rights. This lets founders maintain control even as they sell economic interest to the public.</p>
+
+  <div class="grid-2">
+    <div class="card card-gold">
+      <h3>Class A — Public Shares</h3>
+      <p>Typically 1 vote per share. This is what trades on the exchange and what retail investors buy.</p>
+    </div>
+    <div class="card card-gold">
+      <h3>Class B — Founder/Insider Shares</h3>
+      <p>Often 10 votes per share (sometimes 20). Held by founders and early insiders. Gives them outsized control over company decisions.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Real-World Example: Meta (Facebook)</h3>
+    <p>Mark Zuckerberg holds Class B shares with <strong>10 votes each</strong>. Despite owning roughly 13% of Meta's total economic interest, he controls approximately <strong>61% of the voting power</strong>. Public shareholders collectively own the majority of the economic value but have minority voting control.</p>
+    <p>This dual-class structure is controversial: it protects founder vision but limits shareholder accountability. Institutional investors (pension funds, index funds) increasingly push back against it.</p>
+  </div>
+
+  <h3>Dilution — When Your Slice Gets Thinner</h3>
+  <p><strong>Dilution</strong> occurs when a company issues new shares, reducing each existing shareholder's percentage of ownership. Common triggers include follow-on equity offerings (secondary offerings), employee stock option exercises, convertible debt conversions, and stock-based acquisition payments.</p>
+
+  <div class="callout fiduciary">
+    <div class="callout-title">🏛️ Fiduciary Lens</div>
+    <strong>Share structure matters for trust portfolios.</strong> When a trust holds a concentrated position in a dual-class stock, the trustee must consider whether the governance risk (limited voting power, founder entrenchment) aligns with the prudent investor standard. Dilution events also trigger review — is the trust being diluted unfairly? Does it make sense to participate in a follow-on offering?
+  </div>
+</section>
+
+<!-- ═══════════════════════ MONEY ═══════════════════════ -->
+<section class="tab-panel" id="panel-money">
+  <h2>Following the Money</h2>
+  <p class="lead">This is the question everyone asks: "If I buy stock, where does my money go? And how does the company make money from the stock market?" The answer depends on whether it's the primary or secondary market.</p>
+
+  <h3>When the Company Gets the Money</h3>
+  <div class="card card-accent">
+    <h3>Primary Market Transactions</h3>
+    <p>The company receives cash only when it issues <strong>new shares</strong>. This happens in three situations:</p>
+    <p><strong>1. IPO:</strong> Company sells new shares for the first time. The IPO proceeds (minus underwriting fees) go directly to the company's bank account.</p>
+    <p><strong>2. Follow-On Offering:</strong> An already-public company issues additional new shares. Raises more capital but dilutes existing shareholders. (Sometimes loosely called a "secondary offering," though the shares themselves are newly issued.)</p>
+    <p><strong>3. At-the-Market (ATM) Offering:</strong> Company gradually sells new shares directly into the open market through a broker, rather than in a single large offering. Less disruptive but still dilutive.</p>
+  </div>
+
+  <h3>When the Company Gets Nothing</h3>
+  <div class="card card-blue">
+    <h3>Secondary Market Transactions</h3>
+    <p>Once shares are out in the wild, they trade between investors. <strong>The company receives $0</strong> from these trades — no matter how high the stock goes.</p>
+    <p>If you buy 100 shares of Tesla at $250/share, your $25,000 goes to the person who sold those shares to you — not to Tesla. Tesla already got its money when those shares were originally issued.</p>
+    <p>So why does the company care about its stock price? Several reasons: executive compensation is tied to stock price, a high price makes acquisitions cheaper (using stock as currency), it protects against hostile takeovers, and it signals market confidence to customers, partners, and employees.</p>
+  </div>
+
+  <h3>The Money Flow Diagram</h3>
+  <div class="example-box">
+    <div class="example-header">💸 Following the Dollar</div>
+    <div class="example-body">
+      <div class="grid-2" style="margin:0;">
+        <div>
+          <h4 style="color:var(--accent); margin-top:0;">IPO Day — Primary Market</h4>
+          <div class="calc-row"><span class="calc-label">Investor buys IPO shares</span><span class="calc-value">$10,000</span></div>
+          <div class="calc-row"><span class="calc-label">→ Underwriter takes spread (7%)</span><span class="calc-value">−$700</span></div>
+          <div class="calc-row"><span class="calc-label">→ Company receives</span><span class="calc-value highlight">$9,300</span></div>
+          <p style="font-size:13px; margin-top:10px;">Company uses this cash for operations, growth, debt paydown, etc.</p>
+        </div>
+        <div>
+          <h4 style="color:var(--blue); margin-top:0;">Day 2+ — Secondary Market</h4>
+          <div class="calc-row"><span class="calc-label">Investor A buys shares</span><span class="calc-value">$10,000</span></div>
+          <div class="calc-row"><span class="calc-label">→ Investor B (seller) receives</span><span class="calc-value">$10,000</span></div>
+          <div class="calc-row"><span class="calc-label">→ Company receives</span><span class="calc-value highlight">$0</span></div>
+          <p style="font-size:13px; margin-top:10px;">The company is not a party to this transaction at all.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>How Do Companies Return Money to Shareholders?</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h3>📤 Dividends</h3>
+      <p>Cash payments made directly to shareholders — typically quarterly. Paid per share out of company profits. A $1.00/share quarterly dividend means a holder of 1,000 shares receives $1,000 every quarter.</p>
+      <p><strong>Dividend yield</strong> = Annual dividend ÷ Stock price. A stock at $100 paying $3/year has a 3% yield.</p>
+    </div>
+    <div class="card">
+      <h3>🔄 Share Buybacks</h3>
+      <p>Company buys its own shares on the open market, reducing the share count. This increases each remaining share's claim on earnings (higher EPS) and assets.</p>
+      <p>Buybacks are now more common than dividends for returning capital. In 2023, S&P 500 companies spent ~$800B on buybacks vs. ~$600B on dividends.</p>
+    </div>
+  </div>
+
+  <div class="callout fiduciary">
+    <div class="callout-title">🏛️ Fiduciary Lens</div>
+    <strong>Dividend vs. growth stock allocation in trusts:</strong> Trust documents often specify income beneficiaries (who receive dividends) and remainder beneficiaries (who receive the principal upon termination). A portfolio heavy on growth stocks (which pay little/no dividends) may shortchange income beneficiaries, while an all-dividend portfolio may underperform on total return. The trustee must balance these competing interests under the Uniform Prudent Investor Act.
+  </div>
+</section>
+
+<!-- ═══════════════════════ EXAMPLES ═══════════════════════ -->
+<section class="tab-panel" id="panel-examples">
+  <h2>Worked Examples</h2>
+  <p class="lead">Let's walk through realistic scenarios with real numbers to cement the concepts.</p>
+
+  <div class="example-box">
+    <div class="example-header">📘 Case Study 1 — Acme Corp IPO</div>
+    <div class="example-body">
+      <p><strong>Scenario:</strong> Acme Corp is a private SaaS company doing $200M in annual revenue. They want to go public to raise growth capital and give early investors liquidity.</p>
+      <h4 style="margin-top:16px;">Pre-IPO Cap Table</h4>
+      <div class="calc-row"><span class="calc-label">Founders</span><span class="calc-value">40M shares (40%)</span></div>
+      <div class="calc-row"><span class="calc-label">Venture Capital investors</span><span class="calc-value">35M shares (35%)</span></div>
+      <div class="calc-row"><span class="calc-label">Employees (options/RSUs)</span><span class="calc-value">25M shares (25%)</span></div>
+      <div class="calc-divider"></div>
+      <div class="calc-row"><span class="calc-label">Total pre-IPO shares</span><span class="calc-value">100M shares</span></div>
+
+      <h4>The IPO</h4>
+      <p>Acme issues <strong>20 million new shares</strong> at <strong>$25/share</strong>. Additionally, VCs sell 5 million of their existing shares (secondary).</p>
+      <div class="calc-row"><span class="calc-label">New shares issued (primary)</span><span class="calc-value">20M × $25 = $500M</span></div>
+      <div class="calc-row"><span class="calc-label">VC shares sold (secondary)</span><span class="calc-value">5M × $25 = $125M</span></div>
+      <div class="calc-row"><span class="calc-label">Total IPO size</span><span class="calc-value">$625M</span></div>
+      <div class="calc-row"><span class="calc-label">Underwriter fees on primary (7%)</span><span class="calc-value">$500M × 0.07 = −$35M</span></div>
+      <div class="calc-row"><span class="calc-label">Underwriter fees on secondary (7%)</span><span class="calc-value">$125M × 0.07 = −$8.75M</span></div>
+      <div class="calc-divider"></div>
+      <div class="calc-row"><span class="calc-label">Net to Acme Corp (primary − fees)</span><span class="calc-value highlight">$465,000,000</span></div>
+      <div class="calc-row"><span class="calc-label">Net to selling VCs (secondary − fees)</span><span class="calc-value highlight">$116,250,000</span></div>
+
+      <h4>Post-IPO Share Structure</h4>
+      <div class="calc-row"><span class="calc-label">Total outstanding shares</span><span class="calc-value">120M (100M old + 20M new)</span></div>
+      <div class="calc-row"><span class="calc-label">Founders ownership</span><span class="calc-value">40M / 120M = 33.3% (diluted from 40%)</span></div>
+      <div class="calc-row"><span class="calc-label">Market Cap (at $25)</span><span class="calc-value">120M × $25 = $3.0 billion</span></div>
+      <div class="calc-row"><span class="calc-label">Implied revenue multiple</span><span class="calc-value">$3.0B / $200M = 15x revenue</span></div>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="example-header">📘 Case Study 2 — Understanding EPS & Buybacks</div>
+    <div class="example-body">
+      <p><strong>Scenario:</strong> MegaCorp earns $10 billion in net income. It has 2 billion shares outstanding and decides to spend $5 billion buying back shares at $100/share.</p>
+      <h4 style="margin-top:16px;">Before Buyback</h4>
+      <div class="calc-row"><span class="calc-label">Net Income</span><span class="calc-value">$10,000,000,000</span></div>
+      <div class="calc-row"><span class="calc-label">Shares Outstanding</span><span class="calc-value">2,000,000,000</span></div>
+      <div class="calc-divider"></div>
+      <div class="calc-row"><span class="calc-label">EPS (Earnings Per Share)</span><span class="calc-value highlight">$5.00</span></div>
+
+      <h4>The Buyback</h4>
+      <div class="calc-row"><span class="calc-label">Buyback amount</span><span class="calc-value">$5,000,000,000</span></div>
+      <div class="calc-row"><span class="calc-label">Shares repurchased ($5B ÷ $100)</span><span class="calc-value">50,000,000 shares</span></div>
+
+      <h4>After Buyback</h4>
+      <div class="calc-row"><span class="calc-label">Remaining shares</span><span class="calc-value">1,950,000,000</span></div>
+      <div class="calc-row"><span class="calc-label">Same net income</span><span class="calc-value">$10,000,000,000</span></div>
+      <div class="calc-divider"></div>
+      <div class="calc-row"><span class="calc-label">New EPS</span><span class="calc-value highlight">$5.13 (+2.6%)</span></div>
+      <p style="margin-top:14px; font-size:14px;">The company didn't earn more money — it just has fewer shares to divide earnings across. EPS growth from buybacks is "financial engineering," not operational improvement. Savvy analysts look at total net income growth alongside EPS growth to separate the two.</p>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="example-header">📘 Case Study 3 — Dilution from a Follow-On Offering</div>
+    <div class="example-body">
+      <p><strong>Scenario:</strong> You own 10,000 shares of GrowthCo (out of 100 million outstanding) — a 0.01% stake. GrowthCo needs capital and issues 20 million new shares at $50/share.</p>
+      <h4 style="margin-top:16px;">Before the Offering</h4>
+      <div class="calc-row"><span class="calc-label">Your ownership</span><span class="calc-value">10,000 / 100M = 0.0100%</span></div>
+      <div class="calc-row"><span class="calc-label">Stock price</span><span class="calc-value">$55</span></div>
+      <div class="calc-row"><span class="calc-label">Your position value</span><span class="calc-value">$550,000</span></div>
+
+      <h4>After the Offering</h4>
+      <div class="calc-row"><span class="calc-label">New total shares</span><span class="calc-value">120,000,000</span></div>
+      <div class="calc-row"><span class="calc-label">Your ownership</span><span class="calc-value">10,000 / 120M = 0.0083%</span></div>
+      <div class="calc-row"><span class="calc-label">Dilution</span><span class="calc-value highlight">−16.7%</span></div>
+      <p style="margin-top:14px; font-size:14px;">Your ownership shrank from 0.01% to 0.0083%. If the new capital generates strong returns, the stock price may rise enough to offset the dilution. But if the money is spent poorly, you now own a smaller piece of a less efficient company.</p>
+      <p style="font-size:14px;">Often the stock price dips after a follow-on offering announcement because the market anticipates the dilutive effect.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ NUANCES ═══════════════════════ -->
+<section class="tab-panel" id="panel-nuances">
+  <h2>Nuances & Edge Cases</h2>
+  <p class="lead">The standard model is clean. Reality isn't. Here's where things get complicated.</p>
+
+  <div class="toggle-group">
+    <div class="toggle-item">
+      <div class="toggle-header">
+        <h3>Insider Trading & Lockup Periods</h3>
+        <span class="toggle-arrow">▼</span>
+      </div>
+      <div class="toggle-body">
+        <p>After an IPO, insiders (founders, executives, early investors) are typically subject to a <strong>lockup period</strong> — usually 90 to 180 days — during which they <em>cannot</em> sell their shares. This prevents a flood of selling that would tank the stock price.</p>
+        <p>Even after lockup expires, insiders must follow <strong>SEC Rule 10b-5</strong> and cannot trade on material non-public information (MNPI). Most insiders use <strong>10b5-1 plans</strong> — pre-scheduled trading plans that specify dates, amounts, and prices in advance, insulating them from insider trading accusations.</p>
+        <p>Insiders must also file <strong>Form 4</strong> with the SEC within 2 business days of any trade, making their activity public.</p>
+      </div>
+    </div>
+
+    <div class="toggle-item">
+      <div class="toggle-header">
+        <h3>The IPO Pop — Feature or Bug?</h3>
+        <span class="toggle-arrow">▼</span>
+      </div>
+      <div class="toggle-body">
+        <p>It's common for stocks to surge 20–50%+ on their first day of trading. This "pop" is often celebrated in the media, but it actually represents money left on the table by the issuing company.</p>
+        <p><strong>Example:</strong> If a company prices its IPO at $20 and the stock closes Day 1 at $30, the company raised $20/share. But the market was willing to pay $30. The $10/share difference went to the institutional investors who received IPO allocations — not to the company.</p>
+        <p>On 100 million shares, that's a <strong>$1 billion transfer of value</strong> from the company to favored investors. This is why direct listings appeal to some companies — they skip the underpricing dynamic entirely.</p>
+      </div>
+    </div>
+
+    <div class="toggle-item">
+      <div class="toggle-header">
+        <h3>Stock Splits — More Shares, Same Value</h3>
+        <span class="toggle-arrow">▼</span>
+      </div>
+      <div class="toggle-body">
+        <p>A stock split increases the number of shares outstanding while proportionally reducing the price per share. A <strong>4-for-1 split</strong> turns 1 share at $400 into 4 shares at $100.</p>
+        <p>Splits create zero economic value — they're cosmetic. But they do lower the per-share price, making the stock more accessible to retail investors and eligible for price-weighted indexes like the Dow Jones Industrial Average.</p>
+        <p>Reverse splits (e.g., 1-for-10) consolidate shares to raise the price. Companies often do this to avoid being delisted from exchanges that require minimum share prices ($1 on NASDAQ).</p>
+      </div>
+    </div>
+
+    <div class="toggle-item">
+      <div class="toggle-header">
+        <h3>Short Selling — Betting Against a Stock</h3>
+        <span class="toggle-arrow">▼</span>
+      </div>
+      <div class="toggle-body">
+        <p><strong>Short selling</strong> is borrowing shares from another investor, selling them immediately, and hoping to buy them back later at a lower price to pocket the difference.</p>
+        <p><strong>The mechanics:</strong> You borrow 100 shares of XYZ at $50, sell them for $5,000. If XYZ drops to $30, you buy 100 shares for $3,000, return them to the lender, and keep the $2,000 profit. If XYZ rises to $80, you must buy back at $8,000 — a $3,000 loss.</p>
+        <p>Short selling has <strong>unlimited loss potential</strong> (there's no cap on how high a stock can go) and limited gain potential (a stock can only go to $0). This asymmetry makes it inherently riskier than going long.</p>
+        <p>The <strong>short interest</strong> ratio measures how many shares are currently sold short relative to float. A high short interest can lead to a <strong>short squeeze</strong> — as the price rises, short sellers are forced to buy shares to cover their losses, which pushes the price up further (see: GameStop in January 2021).</p>
+      </div>
+    </div>
+
+    <div class="toggle-item">
+      <div class="toggle-header">
+        <h3>Payment for Order Flow (PFOF)</h3>
+        <span class="toggle-arrow">▼</span>
+      </div>
+      <div class="toggle-body">
+        <p>When you trade on a zero-commission platform like Robinhood, your order often isn't going directly to the NYSE. Instead, your broker sells your order to a <strong>market maker</strong> (like Citadel Securities), who fills it. The market maker pays your broker for this order flow — hence "payment for order flow."</p>
+        <p>The market maker profits from the bid-ask spread. Your broker profits from the payment. You get free trades but may get <strong>slightly worse execution prices</strong> than you would on the exchange directly.</p>
+        <p>PFOF is controversial. Critics argue it creates a conflict of interest — your broker is incentivized to route orders to whoever pays the most, not whoever gives you the best price. The SEC has adopted rules to increase transparency around execution quality, and the regulatory landscape around PFOF continues to evolve.</p>
+      </div>
+    </div>
+
+    <div class="toggle-item">
+      <div class="toggle-header">
+        <h3>Going Private Again — Delistings & Buyouts</h3>
+        <span class="toggle-arrow">▼</span>
+      </div>
+      <div class="toggle-body">
+        <p>Public companies can go private again, usually through a <strong>management buyout (MBO)</strong> or a <strong>leveraged buyout (LBO)</strong> by a private equity firm.</p>
+        <p>The buyer offers a premium over the current stock price to acquire all outstanding shares. Shareholders vote to approve the deal. Once complete, the stock is delisted from the exchange, and the company is private again.</p>
+        <p><strong>Example:</strong> Elon Musk took Twitter private in 2022, purchasing all outstanding shares at $54.20/share for ~$44 billion total. Twitter was subsequently delisted from the NYSE.</p>
+        <p>Companies may also be <strong>involuntarily delisted</strong> if they fail to meet exchange listing requirements (minimum stock price, minimum market cap, financial reporting deadlines).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ GLOSSARY ═══════════════════════ -->
+<section class="tab-panel" id="panel-glossary">
+  <h2>Glossary</h2>
+  <p class="lead">Quick-reference definitions for every key term in this guide.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:28%;">Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Authorized Shares</strong></td><td>Maximum shares a company can issue under its corporate charter. Requires shareholder vote to change.</td></tr>
+        <tr><td><strong>Ask Price</strong></td><td>The lowest price at which a seller is willing to sell a stock.</td></tr>
+        <tr><td><strong>ATM Offering</strong></td><td>At-the-market offering. Company sells new shares gradually into the open market through a broker-dealer.</td></tr>
+        <tr><td><strong>Bid Price</strong></td><td>The highest price at which a buyer is willing to buy a stock.</td></tr>
+        <tr><td><strong>Bid-Ask Spread</strong></td><td>The difference between the bid and ask prices. Acts as a transaction cost; tighter = more liquid.</td></tr>
+        <tr><td><strong>Buyback</strong></td><td>When a company repurchases its own shares on the open market, reducing outstanding share count.</td></tr>
+        <tr><td><strong>Dilution</strong></td><td>Reduction in existing shareholders' ownership percentage caused by the issuance of new shares.</td></tr>
+        <tr><td><strong>Direct Listing</strong></td><td>An alternative to an IPO where existing shares begin trading without underwriter involvement or new share issuance.</td></tr>
+        <tr><td><strong>Dividend</strong></td><td>Cash payment distributed to shareholders, usually quarterly, from company profits.</td></tr>
+        <tr><td><strong>Dividend Yield</strong></td><td>Annual dividend per share divided by the stock price. Expressed as a percentage.</td></tr>
+        <tr><td><strong>DTCC</strong></td><td>Depository Trust & Clearing Corporation. The clearinghouse that settles nearly all U.S. securities trades.</td></tr>
+        <tr><td><strong>EPS</strong></td><td>Earnings Per Share. Net income divided by outstanding shares. The most widely cited profitability metric.</td></tr>
+        <tr><td><strong>Float</strong></td><td>The portion of outstanding shares available for public trading, excluding locked-up and restricted shares.</td></tr>
+        <tr><td><strong>Follow-On Offering</strong></td><td>When a public company issues and sells additional new shares to raise capital. Sometimes loosely called a "secondary offering," though technically the company is issuing primary shares in the secondary market context.</td></tr>
+        <tr><td><strong>Form 4</strong></td><td>SEC filing required within 2 business days when insiders buy or sell company shares.</td></tr>
+        <tr><td><strong>IPO</strong></td><td>Initial Public Offering. A private company's first sale of stock to public investors.</td></tr>
+        <tr><td><strong>Limit Order</strong></td><td>An order to buy or sell a stock only at a specified price or better.</td></tr>
+        <tr><td><strong>Lockup Period</strong></td><td>A 90–180 day period after IPO during which insiders are prohibited from selling their shares.</td></tr>
+        <tr><td><strong>Market Cap</strong></td><td>Total value of a company's outstanding shares. Calculated as stock price × outstanding shares.</td></tr>
+        <tr><td><strong>Market Maker</strong></td><td>A firm that continuously quotes bid and ask prices, providing liquidity to the market.</td></tr>
+        <tr><td><strong>Market Order</strong></td><td>An order to buy or sell immediately at the best available current price.</td></tr>
+        <tr><td><strong>Outstanding Shares</strong></td><td>Total shares held by all shareholders (institutions, insiders, retail). Excludes treasury shares.</td></tr>
+        <tr><td><strong>PFOF</strong></td><td>Payment for Order Flow. When market makers pay brokers for routing customer orders to them.</td></tr>
+        <tr><td><strong>Primary Market</strong></td><td>Where new shares are created and sold by the issuing company. Company receives the proceeds.</td></tr>
+        <tr><td><strong>Roadshow</strong></td><td>Pre-IPO presentations where company executives pitch institutional investors to build demand.</td></tr>
+        <tr><td><strong>S-1</strong></td><td>SEC registration statement containing a company's financials, risk factors, and business description. Required for an IPO.</td></tr>
+        <tr><td><strong>Secondary Market</strong></td><td>Where existing shares trade between investors on an exchange. The company receives nothing.</td></tr>
+        <tr><td><strong>Short Interest</strong></td><td>The total number of shares currently sold short, often expressed as a percentage of float.</td></tr>
+        <tr><td><strong>Short Selling</strong></td><td>Borrowing and selling shares with the intent to buy them back later at a lower price.</td></tr>
+        <tr><td><strong>Short Squeeze</strong></td><td>Rapid price increase that forces short sellers to buy shares to close their positions, further driving up the price.</td></tr>
+        <tr><td><strong>SPAC</strong></td><td>Special Purpose Acquisition Company. A shell company that IPOs with the intent to merge with a private company.</td></tr>
+        <tr><td><strong>Stock Split</strong></td><td>Increases share count while proportionally reducing share price. Creates no economic value.</td></tr>
+        <tr><td><strong>T+1 Settlement</strong></td><td>Trades settle one business day after execution. Shortened from T+2 in May 2024.</td></tr>
+        <tr><td><strong>10b5-1 Plan</strong></td><td>A pre-arranged trading plan that allows insiders to trade stock on a predetermined schedule.</td></tr>
+        <tr><td><strong>Treasury Shares</strong></td><td>Shares repurchased by the company. They exist but have no voting rights and receive no dividends.</td></tr>
+        <tr><td><strong>Underwriter</strong></td><td>Investment bank that manages an IPO — pricing shares, allocating them to investors, and stabilizing early trading.</td></tr>
+        <tr><td><strong>Underwriting Spread</strong></td><td>The fee (typically 3–7% of proceeds) paid to underwriters for managing an IPO.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  Learning Dashboard — Public Company Stock &middot; Built for structured knowledge building
+</footer>
+
+<script>
+  // ─── Tab Navigation ───
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      tabBtns.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + target).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // ─── Toggle Accordion ───
+  document.querySelectorAll('.toggle-header').forEach(header => {
+    header.addEventListener('click', () => {
+      header.parentElement.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>
