@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI as a Force Multiplier — Interactive Learning Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --bg2: #ffffff;
+    --bg3: #f3f1eb;
+    --bg4: #e8e5dc;
+    --border: rgba(26,24,20,0.1);
+    --border-mid: rgba(26,24,20,0.15);
+    --border-hi: rgba(26,24,20,0.28);
+    --text: #1a1814;
+    --text-soft: #3d3a34;
+    --text-muted: #6b6760;
+    --amber: #9a5c00;
+    --amber-dim: rgba(154,92,0,0.1);
+    --amber-glow: rgba(154,92,0,0.06);
+    --green: #1a6b3c;
+    --green-dim: rgba(26,107,60,0.09);
+    --red: #b03a28;
+    --red-dim: rgba(176,58,40,0.09);
+    --blue: #1e4fbf;
+    --blue-dim: rgba(30,79,191,0.09);
+    --teal: #0a6b60;
+    --teal-dim: rgba(10,107,96,0.09);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --radius-lg: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: #1a1814;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 0 40px;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .header-mark {
+    width: 4px;
+    background: var(--amber);
+    margin: 10px 20px 10px 0;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .header-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 14px 0;
+  }
+
+  .header-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #e8a930;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: #f0ede8;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .header-badge {
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .badge-practical { background: var(--amber-dim); color: var(--amber); }
+  .badge-workflows { background: var(--green-dim); color: var(--green); }
+
+  /* ── TABS ── */
+  .tab-bar {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    padding: 15px 18px 13px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .tab-btn:hover { color: var(--text-soft); }
+  .tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+  /* ── LAYOUT ── */
+  .content-wrap {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 44px 40px 90px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── TYPOGRAPHY ── */
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--text);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--text);
+    font-weight: 400;
+    margin-bottom: 12px;
+    margin-top: 36px;
+    letter-spacing: -0.01em;
+  }
+
+  h4 {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  p { margin-bottom: 14px; color: var(--text-soft); }
+  p:last-child { margin-bottom: 0; }
+
+  .lead {
+    font-size: 16px;
+    color: var(--text-soft);
+    font-weight: 300;
+    line-height: 1.75;
+    margin-bottom: 36px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  strong { color: var(--text); font-weight: 600; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+
+  .card-grid { display: grid; gap: 14px; }
+  .card-grid-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .card-amber {
+    background: var(--amber-glow);
+    border: 1px solid rgba(154,92,0,0.2);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+
+  .card-green {
+    background: var(--green-dim);
+    border: 1px solid rgba(26,107,60,0.2);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+
+  .card-blue {
+    background: var(--blue-dim);
+    border: 1px solid rgba(30,79,191,0.2);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+
+  .card-teal {
+    background: var(--teal-dim);
+    border: 1px solid rgba(10,107,96,0.2);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+
+  .card-red {
+    background: var(--red-dim);
+    border: 1px solid rgba(176,58,40,0.2);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+
+  /* ── ACCENT STRIP ── */
+  .accent-strip {
+    border-left: 3px solid var(--amber);
+    padding: 14px 18px;
+    background: var(--amber-glow);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin: 20px 0;
+  }
+  .accent-strip p { font-size: 14px; margin-bottom: 0; color: var(--text-soft); }
+  .accent-strip .strip-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 5px;
+  }
+
+  /* ── TAG ── */
+  .tag {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .tag-amber { background: var(--amber-dim); color: var(--amber); }
+  .tag-green { background: var(--green-dim); color: var(--green); }
+  .tag-blue { background: var(--blue-dim); color: var(--blue); }
+  .tag-teal { background: var(--teal-dim); color: var(--teal); }
+  .tag-red { background: var(--red-dim); color: var(--red); }
+
+  /* ── TABLE ── */
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 16px 0;
+  }
+  .styled-table th {
+    background: var(--bg3);
+    color: var(--text-soft);
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-mid);
+  }
+  .styled-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-soft);
+    vertical-align: top;
+  }
+  .styled-table tr:last-child td { border-bottom: none; }
+  .styled-table tr:hover td { background: var(--bg3); }
+
+  /* ── STEP LIST ── */
+  .step-list { list-style: none; padding: 0; }
+  .step-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--amber);
+    color: var(--bg);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-body strong { color: var(--text); display: block; font-weight: 600; margin-bottom: 2px; }
+  .step-body p { font-size: 14px; margin-bottom: 0; }
+
+  /* ── SECTION ── */
+  .section { margin-top: 40px; }
+  .section:first-child { margin-top: 0; }
+  .divider { height: 1px; background: var(--border); margin: 36px 0; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--bg3);
+    border: 1px solid var(--border-mid);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin: 22px 0;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .callout-icon { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+  .callout-body .callout-title {
+    font-size: 13px; font-weight: 600; color: var(--amber); margin-bottom: 4px;
+  }
+  .callout-body p { font-size: 13.5px; color: var(--text-soft); margin-bottom: 0; }
+
+  /* ── PROMPT BUILDER ── */
+  .prompt-builder {
+    background: var(--bg2);
+    border: 1px solid var(--border-mid);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .pb-header {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pb-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .pb-dot-r { background: #e06b5f; }
+  .pb-dot-y { background: #e0b25f; }
+  .pb-dot-g { background: #5fad7b; }
+  .pb-title { font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em; font-weight: 500; text-transform: uppercase; margin-left: 4px; }
+
+  .pb-body { padding: 16px 18px; }
+
+  .pb-layer {
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    border: 1px solid;
+  }
+  .pb-layer:last-child { margin-bottom: 0; }
+
+  .pb-role {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  .layer-system { background: var(--blue-dim); border-color: rgba(30,79,191,0.2); }
+  .layer-system .pb-role { color: var(--blue); }
+  .layer-system .pb-text { color: #1a3d99; }
+
+  .layer-context { background: var(--teal-dim); border-color: rgba(10,107,96,0.2); }
+  .layer-context .pb-role { color: var(--teal); }
+  .layer-context .pb-text { color: #0a5548; }
+
+  .layer-user { background: var(--amber-glow); border-color: rgba(154,92,0,0.2); }
+  .layer-user .pb-role { color: var(--amber); }
+  .layer-user .pb-text { color: #7a4800; }
+
+  .layer-output { background: var(--green-dim); border-color: rgba(26,107,60,0.2); }
+  .layer-output .pb-role { color: var(--green); }
+  .layer-output .pb-text { color: #155230; }
+
+  /* ── WORKFLOW CARDS ── */
+  .workflow-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 18px 0;
+  }
+
+  .workflow-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+  .workflow-card:hover { border-color: var(--border-hi); background: var(--bg3); }
+  .workflow-card.active { border-color: var(--amber); background: var(--amber-glow); }
+  .workflow-card .wf-icon { font-size: 20px; margin-bottom: 8px; }
+  .workflow-card .wf-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .workflow-card .wf-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+  .workflow-detail {
+    background: var(--bg2);
+    border: 1px solid var(--border-mid);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-top: 4px;
+    display: none;
+  }
+  .workflow-detail.active { display: block; }
+
+  /* ── PROMPT ANATOMY ── */
+  .anatomy-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border-mid);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 20px 0;
+  }
+
+  .anatomy-block {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .anatomy-block:last-child { border-bottom: none; }
+  .anatomy-block:hover { background: var(--bg3); }
+  .anatomy-block.expanded { background: var(--bg3); }
+
+  .anatomy-marker {
+    width: 4px;
+    flex-shrink: 0;
+  }
+  .anatomy-body { padding: 14px 18px; flex: 1; }
+  .anatomy-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .anatomy-text { font-size: 13.5px; color: var(--text-soft); }
+  .anatomy-expand {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    padding: 0 18px 0;
+  }
+  .anatomy-expand.open {
+    max-height: 200px;
+    padding: 0 18px 14px;
+  }
+  .anatomy-toggle {
+    padding: 14px 16px;
+    color: var(--text-muted);
+    font-size: 12px;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 16px;
+    transition: color 0.15s;
+  }
+  .anatomy-block:hover .anatomy-toggle { color: var(--text-soft); }
+
+  /* ── TECHNIQUE MATRIX ── */
+  .technique-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .technique-row:last-child { border-bottom: none; }
+  .technique-name {
+    min-width: 180px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .technique-desc { font-size: 13px; color: var(--text-soft); flex: 1; }
+  .technique-score {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .score-pip {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    background: var(--border-mid);
+  }
+  .score-pip.on { background: var(--amber); }
+
+  /* ── USE CASE SELECTOR ── */
+  .use-case-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .uc-tab {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-mid);
+    color: var(--text-muted);
+    background: none;
+    font-family: 'IBM Plex Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .uc-tab:hover { color: var(--text-soft); border-color: var(--border-hi); }
+  .uc-tab.active { background: var(--amber); color: var(--bg); border-color: var(--amber); font-weight: 600; }
+
+  .uc-panel { display: none; }
+  .uc-panel.active { display: block; }
+
+  /* ── EXAMPLE CHAT ── */
+  .chat-wrap {
+    background: var(--bg3);
+    border: 1px solid var(--border-mid);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 16px 0;
+  }
+  .chat-header {
+    background: var(--bg4);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .chat-msg {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+  .chat-msg:last-child { border-bottom: none; }
+  .chat-msg.user { background: var(--bg3); }
+  .chat-msg.assistant { background: var(--bg2); }
+  .msg-role {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .role-user { color: var(--amber); }
+  .role-asst { color: var(--green); }
+  .msg-body { color: var(--text-soft); }
+  .msg-body strong { color: var(--text); }
+
+  /* ── STAT STRIP ── */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 24px 0;
+  }
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+  .stat-label { font-size: 10.5px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* ── RISK METER ── */
+  .risk-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .risk-item:last-child { border-bottom: none; }
+  .risk-name { min-width: 220px; font-size: 13.5px; color: var(--text-soft); }
+  .risk-bar-wrap { flex: 1; height: 6px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+  .risk-bar { height: 100%; border-radius: 3px; }
+  .risk-level { font-size: 11px; min-width: 60px; text-align: right; font-weight: 600; }
+
+  /* ── GLOSSARY ── */
+  .glossary-entry {
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 16px;
+    align-items: baseline;
+  }
+  .glossary-entry:last-child { border-bottom: none; }
+  .glossary-term { font-weight: 600; font-size: 13.5px; color: var(--text); }
+  .glossary-def { font-size: 13.5px; color: var(--text-soft); line-height: 1.6; }
+
+  /* ── INTERACTIVE MULTIPLIER CALC ── */
+  .calc-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border-mid);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin: 20px 0;
+  }
+  .range-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+  .range-row label { min-width: 160px; color: var(--text-soft); }
+  .range-row input[type=range] { flex: 1; accent-color: var(--amber); }
+  .range-row .val { min-width: 52px; text-align: right; font-weight: 600; color: var(--amber); font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+
+  .calc-result {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .calc-metric {
+    text-align: center;
+  }
+  .calc-metric .metric-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .calc-metric .metric-label {
+    font-size: 10.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── MODEL COMPARE ── */
+  .model-compare {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 18px 0;
+  }
+  .model-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: border-color 0.2s;
+  }
+  .model-card:hover { border-color: var(--border-hi); }
+  .model-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .model-org { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.04em; }
+  .model-bar-row { margin: 6px 0; }
+  .model-bar-label { font-size: 11px; color: var(--text-muted); margin-bottom: 3px; display: flex; justify-content: space-between; }
+  .model-bar-bg { height: 5px; background: var(--bg4); border-radius: 2px; overflow: hidden; }
+  .model-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+
+  /* ── MISC ── */
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    background: var(--bg3);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--amber);
+    border: 1px solid var(--border);
+  }
+
+  ul.clean-list { list-style: none; padding: 0; }
+  ul.clean-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text-soft);
+    padding-left: 16px;
+    position: relative;
+  }
+  ul.clean-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--amber);
+  }
+  ul.clean-list li:last-child { border-bottom: none; }
+
+  @media (max-width: 700px) {
+    .content-wrap { padding: 24px 20px 60px; }
+    .site-header, .tab-bar { padding: 0 16px; }
+    .card-grid-2, .card-grid-3, .workflow-grid, .model-compare { grid-template-columns: 1fr; }
+    .stat-strip { grid-template-columns: 1fr 1fr; }
+    .glossary-entry { grid-template-columns: 1fr; gap: 4px; }
+    .calc-result { grid-template-columns: 1fr; }
+    h2 { font-size: 26px; }
+    .technique-name { min-width: 130px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-mark"></div>
+  <div class="header-text">
+    <div class="header-eyebrow">Learning Dashboard · Series 2</div>
+    <div class="header-title">AI as a Force Multiplier</div>
+  </div>
+  <div class="header-right">
+    <span class="header-badge badge-practical">Practical</span>
+    <span class="header-badge badge-workflows">Workflows</span>
+  </div>
+</header>
+
+<!-- TAB BAR -->
+<nav class="tab-bar" role="tablist">
+  <button class="tab-btn active" data-tab="overview">Overview</button>
+  <button class="tab-btn" data-tab="prompting">Prompt Engineering</button>
+  <button class="tab-btn" data-tab="workflows">Workflow Patterns</button>
+  <button class="tab-btn" data-tab="usecases">Use Cases</button>
+  <button class="tab-btn" data-tab="agentic">Agentic AI</button>
+  <button class="tab-btn" data-tab="limits">Limits & Risks</button>
+  <button class="tab-btn" data-tab="glossary">Glossary</button>
+</nav>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  TAB 1: OVERVIEW                        -->
+<!-- ═══════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-overview">
+<div class="content-wrap">
+  <h2>The Leverage Shift</h2>
+  <p class="lead">AI doesn't replace skilled professionals — it compresses the time between thinking and doing. Tasks that once took hours can take minutes. First drafts that required research become instant starting points. The professionals who will outperform in the next decade aren't those who avoid AI, but those who develop judgment about when to trust it, when to push it, and when to override it entirely.</p>
+
+  <div class="section">
+    <h4>What changes when you use AI well</h4>
+    <div class="card-grid card-grid-3" style="margin-top:14px">
+      <div class="card">
+        <div style="font-size:22px;margin-bottom:10px">⚡</div>
+        <strong style="display:block;margin-bottom:6px;font-size:15px">Speed of first draft</strong>
+        <p style="font-size:13.5px">The blank page problem largely disappears. Analysis, summaries, correspondence, and structured documents can be generated in seconds — leaving your time for refinement and judgment.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:22px;margin-bottom:10px">🔭</div>
+        <strong style="display:block;margin-bottom:6px;font-size:15px">Breadth of analysis</strong>
+        <p style="font-size:13.5px">A well-prompted model can consider angles you'd have taken hours to research — surfacing frameworks, counterarguments, and relevant considerations faster than any individual could.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:22px;margin-bottom:10px">🔁</div>
+        <strong style="display:block;margin-bottom:6px;font-size:15px">Iteration velocity</strong>
+        <p style="font-size:13.5px">The cost of a second or third draft drops to near-zero. You can request "make this more formal," "add a counterargument," or "shorten by 40%" in seconds — enabling real-time refinement.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>The productivity multiplier: an honest estimate</h3>
+    <p>Quantifying AI productivity gains is hard and depends heavily on the task, skill level, and quality bar. But studies and practitioner reports consistently find meaningful improvements for knowledge work tasks involving writing, research, and synthesis.</p>
+
+    <div class="calc-wrap">
+      <h4 style="margin-bottom:16px">Estimate your time savings</h4>
+      <div class="range-row">
+        <label>Hours/week on drafting tasks</label>
+        <input type="range" id="draft-hours" min="1" max="20" value="8" step="1" oninput="updateCalc()">
+        <span class="val" id="draft-val">8 hrs</span>
+      </div>
+      <div class="range-row">
+        <label>AI speed improvement</label>
+        <input type="range" id="speed-mult" min="2" max="5" value="3" step="1" oninput="updateCalc()">
+        <span class="val" id="speed-val">3×</span>
+      </div>
+      <div class="range-row">
+        <label>% of drafts you use AI for</label>
+        <input type="range" id="pct-use" min="20" max="90" value="60" step="5" oninput="updateCalc()">
+        <span class="val" id="pct-val">60%</span>
+      </div>
+      <div class="calc-result">
+        <div class="calc-metric">
+          <div class="metric-val" id="hrs-saved">—</div>
+          <div class="metric-label">Hours saved / week</div>
+        </div>
+        <div class="calc-metric">
+          <div class="metric-val" id="hrs-year">—</div>
+          <div class="metric-label">Hours recovered / year</div>
+        </div>
+        <div class="calc-metric">
+          <div class="metric-val" id="pct-gain">—</div>
+          <div class="metric-label">Effective output gain</div>
+        </div>
+      </div>
+      <p style="font-size:11.5px;color:var(--text-muted);margin-top:12px">Illustrative estimates. Actual gains vary by task type and skill of prompting. Does not account for quality review time.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Where AI genuinely excels vs. where it struggles</h3>
+    <div class="card-grid card-grid-2" style="margin-top:14px">
+      <div class="card-green">
+        <strong style="display:block;font-size:13px;color:var(--green);margin-bottom:10px">✓ Strong performance</strong>
+        <ul class="clean-list">
+          <li>Drafting, editing, and reformatting text</li>
+          <li>Summarizing long documents</li>
+          <li>Explaining complex concepts in plain language</li>
+          <li>Generating structured output (tables, lists, outlines)</li>
+          <li>Writing and reviewing code</li>
+          <li>Brainstorming and ideation</li>
+          <li>Translation and tone adjustment</li>
+          <li>Research synthesis from provided documents</li>
+        </ul>
+      </div>
+      <div class="card-red">
+        <strong style="display:block;font-size:13px;color:var(--red);margin-bottom:10px">✗ Requires caution</strong>
+        <ul class="clean-list">
+          <li>Specific factual claims (names, dates, citations)</li>
+          <li>Current events past training cutoff</li>
+          <li>Complex multi-step numerical reasoning</li>
+          <li>Predicting individual outcomes with confidence</li>
+          <li>Tasks requiring deep domain judgment</li>
+          <li>Legal advice or medical diagnosis</li>
+          <li>Novel research without grounding documents</li>
+          <li>Tasks where errors are silent and high-stakes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>The right mental model: AI as a smart junior colleague</h3>
+    <div class="accent-strip">
+      <div class="strip-label">Key framing</div>
+      <p>Think of the AI as a very fast, very well-read junior colleague who works without fatigue — but has no lived experience, no access to real-time information, and occasionally confabulates with complete confidence. You'd trust them to do thorough first drafts, synthesize reading lists, and draft correspondence. You wouldn't let them file a brief or approve a wire transfer without review. The same logic applies here.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>The skills that matter now</h3>
+    <div class="stat-strip">
+      <div class="stat-card">
+        <div class="stat-number">1</div>
+        <div class="stat-label">Prompt craft</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">2</div>
+        <div class="stat-label">Output judgment</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Workflow design</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">4</div>
+        <div class="stat-label">Verification habits</div>
+      </div>
+    </div>
+    <p>The leverage comes not from access — nearly everyone has access now — but from skill in using the tools. Prompting well, knowing how to evaluate outputs, designing workflows that fit AI into your process, and building disciplined verification habits are the four skills that differentiate high-leverage from low-leverage AI users.</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  TAB 2: PROMPT ENGINEERING              -->
+<!-- ═══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-prompting">
+<div class="content-wrap">
+  <h2>Prompt Engineering</h2>
+  <p class="lead">Prompting is the primary interface between you and the model. A well-constructed prompt is not just a question — it's a specification. It defines role, task, constraints, format, and examples. The difference between a mediocre prompt and a well-engineered one can be the difference between a useless first draft and something you can actually use.</p>
+
+  <div class="section">
+    <h3>Anatomy of a high-quality prompt</h3>
+    <p>Click each layer to understand its purpose:</p>
+    <div class="anatomy-wrap" id="anatomy">
+      <div class="anatomy-block" onclick="toggleAnatomy(0)">
+        <div class="anatomy-marker" style="background:var(--blue)"></div>
+        <div class="anatomy-body">
+          <div class="anatomy-label" style="color:var(--blue)">Role / Persona</div>
+          <div class="anatomy-text">"You are an experienced legal counsel specializing in trust and estate law…"</div>
+        </div>
+        <div class="anatomy-toggle">▾</div>
+      </div>
+      <div class="anatomy-expand" id="anat-0">Sets the model's operating context. Activating a specific role shifts the model's priors about what vocabulary, depth of analysis, and tone are appropriate. More specific roles produce more relevant outputs than generic ones.</div>
+
+      <div class="anatomy-block" onclick="toggleAnatomy(1)">
+        <div class="anatomy-marker" style="background:var(--teal)"></div>
+        <div class="anatomy-body">
+          <div class="anatomy-label" style="color:var(--teal)">Task specification</div>
+          <div class="anatomy-text">"Review the following clause and identify: (1) ambiguities, (2) missing definitions, (3) enforceability risks…"</div>
+        </div>
+        <div class="anatomy-toggle">▾</div>
+      </div>
+      <div class="anatomy-expand" id="anat-1">The most critical element. Be explicit about what you want, structured as numbered items if there are multiple sub-tasks. Vague verbs ("review," "discuss") produce vague outputs. Specific verbs with clear deliverables ("identify," "list," "draft," "compare") produce actionable outputs.</div>
+
+      <div class="anatomy-block" onclick="toggleAnatomy(2)">
+        <div class="anatomy-marker" style="background:var(--amber)"></div>
+        <div class="anatomy-body">
+          <div class="anatomy-label" style="color:var(--amber)">Context / Input</div>
+          <div class="anatomy-text">"The agreement governs a Delaware trust with UHNW beneficiaries. Here is the clause: [CLAUSE TEXT]"</div>
+        </div>
+        <div class="anatomy-toggle">▾</div>
+      </div>
+      <div class="anatomy-expand" id="anat-2">Provide all relevant context the model needs but doesn't have. This includes background, relevant facts, the actual material to work on, and any constraints from the specific situation. Don't assume the model knows your client's circumstances — tell it.</div>
+
+      <div class="anatomy-block" onclick="toggleAnatomy(3)">
+        <div class="anatomy-marker" style="background:var(--green)"></div>
+        <div class="anatomy-body">
+          <div class="anatomy-label" style="color:var(--green)">Format / Constraints</div>
+          <div class="anatomy-text">"Respond in a numbered list. Flag each issue with severity: High / Medium / Low. Keep each item under 50 words."</div>
+        </div>
+        <div class="anatomy-toggle">▾</div>
+      </div>
+      <div class="anatomy-expand" id="anat-3">Specify the output format explicitly. Without format guidance, models default to flowing prose that may not be actionable. Use numbered lists for issues, tables for comparisons, specific headers for structured documents. Length constraints prevent verbose padding.</div>
+
+      <div class="anatomy-block" onclick="toggleAnatomy(4)">
+        <div class="anatomy-marker" style="background:var(--red)"></div>
+        <div class="anatomy-body">
+          <div class="anatomy-label" style="color:var(--red)">Negative constraints</div>
+          <div class="anatomy-text">"Do not provide legal advice. Do not suggest specific legal remedies. Flag where attorney review is required."</div>
+        </div>
+        <div class="anatomy-toggle">▾</div>
+      </div>
+      <div class="anatomy-expand" id="anat-4">Telling the model what NOT to do is as important as telling it what to do. Negative constraints prevent common failure modes: adding excessive caveats, going beyond scope, adopting the wrong tone, or including information you don't want. Use sparingly — too many negatives produce stilted output.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Core prompting techniques</h3>
+    <div class="card" style="margin-top:14px">
+      <div class="technique-row">
+        <div class="technique-name">Few-shot examples</div>
+        <div class="technique-desc">Show the model 2–3 examples of the input→output pattern you want. The most reliable way to specify format and style without lengthy instructions. "Here is an example of the output format: [EXAMPLE]"</div>
+        <div class="technique-score">
+          <div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div>
+        </div>
+      </div>
+      <div class="technique-row">
+        <div class="technique-name">Chain of thought</div>
+        <div class="technique-desc">Ask the model to show its reasoning before giving an answer. "Think through this step by step." Dramatically improves accuracy on multi-step problems by forcing intermediate reasoning to be explicit.</div>
+        <div class="technique-score">
+          <div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip"></div>
+        </div>
+      </div>
+      <div class="technique-row">
+        <div class="technique-name">Role assignment</div>
+        <div class="technique-desc">Give the model an explicit expert persona. "You are a senior financial analyst…" Shifts vocabulary, depth of analysis, and default assumptions toward that domain. Most effective when the role is specific, not generic.</div>
+        <div class="technique-score">
+          <div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip"></div>
+        </div>
+      </div>
+      <div class="technique-row">
+        <div class="technique-name">XML/structured tags</div>
+        <div class="technique-desc">Wrap sections of long prompts in tags like <code>&lt;document&gt;</code>, <code>&lt;instructions&gt;</code>, <code>&lt;examples&gt;</code>. Prevents the model from confusing your instructions with the material you're asking it to analyze. Especially useful for document review prompts.</div>
+        <div class="technique-score">
+          <div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip"></div><div class="score-pip"></div>
+        </div>
+      </div>
+      <div class="technique-row">
+        <div class="technique-name">Iterative refinement</div>
+        <div class="technique-desc">Use follow-up turns to refine output rather than trying to get everything right in one shot. "Make this more formal." "Add a section on X." "Shorten by 30%." Conversation is the interface — use it.</div>
+        <div class="technique-score">
+          <div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div>
+        </div>
+      </div>
+      <div class="technique-row" style="border-bottom:none">
+        <div class="technique-name">Negative prompting</div>
+        <div class="technique-desc">Explicitly state what to exclude, avoid, or not do. "Do not include legal advice." "Avoid jargon." "Do not summarize what I already said." Prevents predictable failure modes without lengthy positive specifications.</div>
+        <div class="technique-score">
+          <div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip on"></div><div class="score-pip"></div><div class="score-pip"></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11.5px;color:var(--text-muted);margin-top:8px">Score bars indicate practical impact on output quality. Scores are qualitative practitioner assessments.</p>
+  </div>
+
+  <div class="section">
+    <h3>Prompt structure: before and after</h3>
+
+    <div class="card" style="margin-top:14px">
+      <h4 style="color:var(--red);margin-bottom:10px">Weak prompt</h4>
+      <div class="prompt-builder">
+        <div class="pb-header">
+          <div class="pb-dot pb-dot-r"></div><div class="pb-dot pb-dot-y"></div><div class="pb-dot pb-dot-g"></div>
+          <span class="pb-title">Prompt</span>
+        </div>
+        <div class="pb-body">
+          <div class="pb-layer layer-user">
+            <div class="pb-role">User</div>
+            <div class="pb-text">Can you review this trust agreement and tell me if there are any issues?
+
+[PASTE OF 40-PAGE DOCUMENT]</div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:8px">Problems: No role context. "Issues" is undefined — legal? formatting? structural? No output format specified. 40 pages with no focus instruction will produce a generic summary, not an actionable analysis.</p>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h4 style="color:var(--green);margin-bottom:10px">Strong prompt</h4>
+      <div class="prompt-builder">
+        <div class="pb-header">
+          <div class="pb-dot pb-dot-r"></div><div class="pb-dot pb-dot-y"></div><div class="pb-dot pb-dot-g"></div>
+          <span class="pb-title">Prompt</span>
+        </div>
+        <div class="pb-body">
+          <div class="pb-layer layer-system">
+            <div class="pb-role">System</div>
+            <div class="pb-text">You are a trust and estates attorney reviewing documents for a fiduciary. Your role is to identify drafting issues, ambiguities, and missing provisions — not to provide legal advice or recommend action.</div>
+          </div>
+          <div class="pb-layer layer-context">
+            <div class="pb-role">Context</div>
+            <div class="pb-text">This is a Delaware revocable living trust for a UHNW client with concentrated equity holdings. The trust will hold both liquid and illiquid assets. Review Article IV (Distribution Standards) only.</div>
+          </div>
+          <div class="pb-layer layer-user">
+            <div class="pb-role">Task</div>
+            <div class="pb-text">&lt;document&gt;[ARTICLE IV TEXT ONLY]&lt;/document&gt;
+
+Identify: (1) ambiguous distribution standards, (2) undefined terms requiring definition, (3) missing provisions common in UHNW contexts. Use a numbered list. Flag severity: High / Medium / Low. Max 60 words per item.</div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:8px">Improvements: Explicit role with scope limitation. Specific context about client type and asset profile. Focused scope (one article, not 40 pages). Structured task with enumerated sub-tasks. Output format and length constraints specified.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Common prompting mistakes</h3>
+    <div class="card-grid card-grid-2" style="margin-top:14px">
+      <div class="card">
+        <div class="tag tag-red" style="margin-bottom:8px">Mistake</div>
+        <strong style="display:block;font-size:13.5px;margin-bottom:5px">Asking too many things at once</strong>
+        <p style="font-size:13px">A prompt that asks for a summary, analysis, recommendations, and email draft will produce a diluted response for each. Break multi-task requests into sequential turns.</p>
+      </div>
+      <div class="card">
+        <div class="tag tag-red" style="margin-bottom:8px">Mistake</div>
+        <strong style="display:block;font-size:13.5px;margin-bottom:5px">Providing too little context</strong>
+        <p style="font-size:13px">The model doesn't know your client, situation, or constraints. Assume it knows nothing specific about your context and provide what it needs to give relevant output.</p>
+      </div>
+      <div class="card">
+        <div class="tag tag-red" style="margin-bottom:8px">Mistake</div>
+        <strong style="display:block;font-size:13.5px;margin-bottom:5px">Accepting first output as final</strong>
+        <p style="font-size:13px">First outputs should be treated as v1 drafts. The real value comes from iteration — push back, ask for refinement, request alternatives. The conversation is the workflow.</p>
+      </div>
+      <div class="card">
+        <div class="tag tag-red" style="margin-bottom:8px">Mistake</div>
+        <strong style="display:block;font-size:13.5px;margin-bottom:5px">Overloading the context window</strong>
+        <p style="font-size:13px">Pasting an entire 50-page document when you only need section 3 analyzed reduces quality. Models perform better on focused inputs. Extract and provide only what's relevant.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  TAB 3: WORKFLOW PATTERNS               -->
+<!-- ═══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-workflows">
+<div class="content-wrap">
+  <h2>Workflow Patterns</h2>
+  <p class="lead">AI creates the most leverage when it's integrated into a deliberate workflow — not just used ad hoc for one-off tasks. Understanding the recurring patterns of how AI fits into professional work helps you identify where to apply it systematically, and where human judgment remains essential.</p>
+
+  <div class="section">
+    <h4>Click a pattern to explore</h4>
+    <div class="workflow-grid" style="margin-top:14px" id="wf-grid">
+      <div class="workflow-card active" data-wf="0" onclick="selectWorkflow(0)">
+        <div class="wf-icon">📝</div>
+        <div class="wf-title">Draft → Refine</div>
+        <div class="wf-desc">AI generates v1; human edits and shapes to final.</div>
+      </div>
+      <div class="workflow-card" data-wf="1" onclick="selectWorkflow(1)">
+        <div class="wf-icon">🔍</div>
+        <div class="wf-title">Analyze → Synthesize</div>
+        <div class="wf-desc">AI processes large inputs, surfaces key patterns.</div>
+      </div>
+      <div class="workflow-card" data-wf="2" onclick="selectWorkflow(2)">
+        <div class="wf-icon">🎯</div>
+        <div class="wf-title">Brainstorm → Filter</div>
+        <div class="wf-desc">AI generates a wide option set; human filters by judgment.</div>
+      </div>
+      <div class="workflow-card" data-wf="3" onclick="selectWorkflow(3)">
+        <div class="wf-icon">🔄</div>
+        <div class="wf-title">Transform → Verify</div>
+        <div class="wf-desc">AI reformats, translates, or restructures content.</div>
+      </div>
+      <div class="workflow-card" data-wf="4" onclick="selectWorkflow(4)">
+        <div class="wf-icon">💬</div>
+        <div class="wf-title">Research → Report</div>
+        <div class="wf-desc">AI researches from provided documents and produces structured output.</div>
+      </div>
+      <div class="workflow-card" data-wf="5" onclick="selectWorkflow(5)">
+        <div class="wf-icon">⚙️</div>
+        <div class="wf-title">Build → Deploy</div>
+        <div class="wf-desc">AI writes and debugs code; human tests and ships.</div>
+      </div>
+    </div>
+
+    <div class="workflow-detail active" id="wf-detail-0">
+      <h4 style="color:var(--amber);margin-bottom:12px">Draft → Refine</h4>
+      <p style="font-size:14px">The most universally applicable pattern. AI produces a complete first draft; the human edits toward final quality. The blank page problem is eliminated. The human's role shifts from construction to curation and judgment.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Best for</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Correspondence and client communications</li>
+            <li>Memos and internal documents</li>
+            <li>Reports, summaries, and executive briefings</li>
+            <li>Presentations and talking points</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Human role</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Verify all factual claims</li>
+            <li>Adjust tone and relationship context</li>
+            <li>Add judgment and nuance AI can't supply</li>
+            <li>Final approval and accountability</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:14px">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <div class="callout-title">Time savings estimate</div>
+          <p>Studies on legal drafting have found 40–70% time reductions on first-draft tasks. McKinsey estimates ~30% productivity gain for knowledge workers adopting AI in drafting workflows. Gains are highest for routine correspondence and lower for highly specialized documents requiring deep domain judgment.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-detail" id="wf-detail-1">
+      <h4 style="color:var(--amber);margin-bottom:12px">Analyze → Synthesize</h4>
+      <p style="font-size:14px">Feed large documents, data sets, or multiple sources to the model and ask it to surface patterns, inconsistencies, or key points. The model's ability to hold large contexts in memory and process them quickly creates genuine leverage for research-heavy work.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Best for</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Contract review and issue-spotting</li>
+            <li>Multi-document research synthesis</li>
+            <li>Due diligence document review</li>
+            <li>Meeting note summarization</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Cautions</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Verify all extracted facts independently</li>
+            <li>Model may miss subtle or implied issues</li>
+            <li>Confident tone ≠ accurate extraction</li>
+            <li>Chunk large documents; don't rely on distant recall</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-detail" id="wf-detail-2">
+      <h4 style="color:var(--amber);margin-bottom:12px">Brainstorm → Filter</h4>
+      <p style="font-size:14px">Use AI to generate a wide set of options, arguments, risks, or alternatives — then apply your judgment to filter, rank, and select. The model is fast and unconstrained in generation; you bring domain knowledge, stakeholder context, and judgment that the model lacks.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Best for</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Risk identification and scenario planning</li>
+            <li>Generating counterarguments</li>
+            <li>Policy options and alternatives analysis</li>
+            <li>Agenda and presentation structure</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Power prompts</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>"Generate 10 counterarguments to this position"</li>
+            <li>"What are 8 risks I may be underweighting?"</li>
+            <li>"What would a skeptical reviewer object to?"</li>
+            <li>"What am I not considering?"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-detail" id="wf-detail-3">
+      <h4 style="color:var(--amber);margin-bottom:12px">Transform → Verify</h4>
+      <p style="font-size:14px">AI excels at reformatting, restructuring, translating, or converting content between formats. Turning bullet points into prose, formal documents into plain-language summaries, or meeting notes into action item lists are high-reliability AI tasks with low hallucination risk — the source material is provided and the output is easily verified.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Best for</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Plain-language summaries for clients</li>
+            <li>Converting dense analysis to slide decks</li>
+            <li>Reformatting data and tables</li>
+            <li>Tone adjustment (formal↔informal)</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Why it's reliable</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>All facts are grounded in the input</li>
+            <li>You can verify output against source</li>
+            <li>Model isn't generating new claims</li>
+            <li>Low stakes for errors — easy to catch</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-detail" id="wf-detail-4">
+      <h4 style="color:var(--amber);margin-bottom:12px">Research → Report</h4>
+      <p style="font-size:14px">Provide the model with source documents and ask it to synthesize a structured report on a specific question. This is not the same as asking the model to research from memory — grounding it in provided documents dramatically increases reliability and reduces hallucination risk.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Best for</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Due diligence from provided filings</li>
+            <li>Policy memo from cited sources</li>
+            <li>Comparative analysis across documents</li>
+            <li>Summarizing regulatory guidance</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Key principle</div>
+          <p style="font-size:13px;color:var(--text-soft)">Grounded synthesis (from provided docs) is far more reliable than ungrounded synthesis (from model memory). Always anchor important research tasks to documents you control.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-detail" id="wf-detail-5">
+      <h4 style="color:var(--amber);margin-bottom:12px">Build → Deploy</h4>
+      <p style="font-size:14px">AI can write, debug, and explain code with impressive reliability for standard tasks. Even non-developers can use AI to build useful tools — data processing scripts, automations, spreadsheet formulas, and simple applications — without needing to understand the underlying code deeply.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Best for</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Python/Excel data processing scripts</li>
+            <li>Automation workflows</li>
+            <li>Regex patterns and formulas</li>
+            <li>Simple web tools and dashboards</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Cautions</div>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Test all code before relying on it</li>
+            <li>Verify logic, not just syntax</li>
+            <li>Be explicit about security requirements</li>
+            <li>Large codebases degrade in quality</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Stacking workflows: the compound effect</h3>
+    <p>The highest-leverage users chain multiple patterns in sequence. A single complex task might move through: <strong>Brainstorm → Filter</strong> (identify the right angle) → <strong>Research → Report</strong> (ground the analysis) → <strong>Draft → Refine</strong> (produce the deliverable) → <strong>Transform → Verify</strong> (adapt for different audiences).</p>
+    <div class="accent-strip" style="margin-top:18px">
+      <div class="strip-label">Example: preparing a client memo</div>
+      <p>① Ask AI to generate risks and considerations for the topic (Brainstorm). ② Feed relevant documents and ask for a synthesis of key points (Research→Report). ③ Request a full memo draft incorporating the findings (Draft). ④ Iterate on tone, length, and structure (Refine). ⑤ Request a plain-language version for the client (Transform). Each step takes minutes rather than the hours a purely manual approach would require.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  TAB 4: USE CASES                       -->
+<!-- ═══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-usecases">
+<div class="content-wrap">
+  <h2>Use Cases by Domain</h2>
+  <p class="lead">The same underlying capabilities apply across domains — but the specific applications, reliability thresholds, and verification requirements differ. These examples illustrate high-leverage use cases for professional knowledge work.</p>
+
+  <div class="section">
+    <div class="use-case-tabs" id="uc-tabs">
+      <button class="uc-tab active" data-uc="writing" onclick="selectUC('writing')">Writing & Communication</button>
+      <button class="uc-tab" data-uc="research" onclick="selectUC('research')">Research & Analysis</button>
+      <button class="uc-tab" data-uc="review" onclick="selectUC('review')">Document Review</button>
+      <button class="uc-tab" data-uc="meetings" onclick="selectUC('meetings')">Meetings & Planning</button>
+      <button class="uc-tab" data-uc="learning" onclick="selectUC('learning')">Learning & Development</button>
+    </div>
+
+    <!-- Writing -->
+    <div class="uc-panel active" id="uc-writing">
+      <div class="card-grid card-grid-2" style="margin-bottom:16px">
+        <div class="card-amber">
+          <strong style="display:block;color:var(--amber);font-size:13px;margin-bottom:6px">Reliability</strong>
+          <p style="font-size:13px">Very high. Writing and editing are core LLM strengths. Hallucination risk is low when you're editing rather than generating facts.</p>
+        </div>
+        <div class="card-green">
+          <strong style="display:block;color:var(--green);font-size:13px;margin-bottom:6px">Time savings</strong>
+          <p style="font-size:13px">Consistently 40–70% reduction on drafting tasks. Highest gains on routine correspondence and templated documents.</p>
+        </div>
+      </div>
+
+      <h4 style="margin-bottom:12px">Example: drafting professional correspondence</h4>
+      <div class="chat-wrap">
+        <div class="chat-header">Prompt → Response Example</div>
+        <div class="chat-msg user">
+          <div class="msg-role role-user">Prompt</div>
+          <div class="msg-body">You are drafting a letter on behalf of a trust officer. The trust beneficiary (adult, age 35) has requested a discretionary distribution of $150,000 for the purchase of a home. The trustee has reviewed the request and is approving it, but wants to note that this reduces the remaining discretionary reserve for the year. Tone should be professional and warm. Close with "Best regards, [Name], Trust Officer."</div>
+        </div>
+        <div class="chat-msg assistant">
+          <div class="msg-role role-asst">Output (abbreviated)</div>
+          <div class="msg-body">Dear [Beneficiary Name],<br><br>I am pleased to inform you that the Trustee has approved your request for a discretionary distribution of <strong>$150,000</strong> in connection with the purchase of your home. We appreciate you providing the detailed documentation supporting this request, and we wish you every success in this exciting chapter.<br><br>Please be advised that this distribution will reduce the remaining discretionary reserve available for the current trust year. Should additional needs arise prior to year-end, we encourage you to reach out as early as possible so we may review any requests in the context of the trust's overall distribution objectives…</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <h4 style="margin-bottom:10px">High-value writing applications</h4>
+        <table class="styled-table">
+          <thead><tr><th>Task</th><th>Prompt approach</th><th>Verification needed</th></tr></thead>
+          <tbody>
+            <tr><td>Client correspondence</td><td>Role + context + tone + constraints</td><td>Facts, tone, relationship nuance</td></tr>
+            <tr><td>Internal memos</td><td>Audience + purpose + key points to cover</td><td>Accuracy, completeness</td></tr>
+            <tr><td>Executive summaries</td><td>Provide source material + length + audience</td><td>All factual claims</td></tr>
+            <tr><td>Talking points</td><td>Topic + audience + desired outcome + bullet count</td><td>Strategic alignment</td></tr>
+            <tr><td>Meeting agendas</td><td>Meeting type + participants + objectives + time</td><td>Completeness, sequencing</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Research -->
+    <div class="uc-panel" id="uc-research">
+      <div class="card-grid card-grid-2" style="margin-bottom:16px">
+        <div class="card-amber">
+          <strong style="display:block;color:var(--amber);font-size:13px;margin-bottom:6px">Reliability</strong>
+          <p style="font-size:13px">High when grounded in provided documents. Low when relying on model memory for specific facts, citations, or recent developments.</p>
+        </div>
+        <div class="card-green">
+          <strong style="display:block;color:var(--green);font-size:13px;margin-bottom:6px">Key principle</strong>
+          <p style="font-size:13px">Provide the documents. Don't ask the model to recall facts from training. Grounded analysis is far more reliable than memory-based research.</p>
+        </div>
+      </div>
+
+      <h4 style="margin-bottom:12px">Research power prompts</h4>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="card" style="padding:14px 18px">
+          <div class="tag tag-amber" style="margin-bottom:8px">Synthesis</div>
+          <p style="font-size:13.5px;font-style:italic;color:var(--text);">"I am attaching [N] documents. Based only on these documents, provide a structured summary of: (1) the key arguments, (2) areas of agreement across sources, (3) areas of disagreement, and (4) gaps or open questions not addressed."</p>
+        </div>
+        <div class="card" style="padding:14px 18px">
+          <div class="tag tag-teal" style="margin-bottom:8px">Issue spotting</div>
+          <p style="font-size:13.5px;font-style:italic;color:var(--text);">"Review the attached document and identify any statements, claims, or data points that appear to require additional verification, sourcing, or are inconsistent with standard practice in [DOMAIN]. Flag each with a brief explanation."</p>
+        </div>
+        <div class="card" style="padding:14px 18px">
+          <div class="tag tag-blue" style="margin-bottom:8px">Comparative</div>
+          <p style="font-size:13.5px;font-style:italic;color:var(--text);">"Compare the following two [documents/positions/approaches] across these dimensions: [X, Y, Z]. Present as a structured table with a brief narrative summary of the most significant differences."</p>
+        </div>
+        <div class="card" style="padding:14px 18px">
+          <div class="tag tag-green" style="margin-bottom:8px">Scenario planning</div>
+          <p style="font-size:13.5px;font-style:italic;color:var(--text);">"Given the following situation, identify: (1) the three most likely outcomes, (2) the two tail risks I should plan for, and (3) the key variables that most affect which outcome occurs."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review -->
+    <div class="uc-panel" id="uc-review">
+      <div class="card-grid card-grid-2" style="margin-bottom:16px">
+        <div class="card-amber">
+          <strong style="display:block;color:var(--amber);font-size:13px;margin-bottom:6px">Reliability</strong>
+          <p style="font-size:13px">Moderate to high for identifying obvious issues; lower for subtle, context-dependent, or jurisdictionally specific concerns. Best as a first pass, not a final review.</p>
+        </div>
+        <div class="card-red">
+          <strong style="display:block;color:var(--red);font-size:13px;margin-bottom:6px">Critical caution</div>
+          <p style="font-size:13px">Never rely on AI document review as a substitute for qualified legal or professional review. AI can surface issues for human investigation — not resolve them.</p>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <h4 style="margin-bottom:10px">Document review workflow</h4>
+        <ol class="step-list">
+          <li class="step-item"><div class="step-num">1</div><div class="step-body"><strong>Extract the relevant section</strong><p>Don't paste the whole document. Identify the clause, section, or provision you want analyzed and provide that specific text.</p></div></li>
+          <li class="step-item"><div class="step-num">2</div><div class="step-body"><strong>Set context and scope</strong><p>Tell the model the document type, governing law, and what type of issues to look for (ambiguity, missing definitions, inconsistency, market standards).</p></div></li>
+          <li class="step-item"><div class="step-num">3</div><div class="step-body"><strong>Specify output format</strong><p>Request numbered issues with severity flags and a brief explanation. This makes the output actionable and easy to triage.</p></div></li>
+          <li class="step-item"><div class="step-num">4</div><div class="step-body"><strong>Human review of flagged items</strong><p>Treat AI output as a checklist of items for human investigation — not conclusions. Each flagged item requires professional judgment to evaluate.</p></div></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Meetings -->
+    <div class="uc-panel" id="uc-meetings">
+      <div class="card-grid card-grid-2" style="margin-bottom:16px">
+        <div class="card-amber">
+          <strong style="display:block;color:var(--amber);font-size:13px;margin-bottom:6px">Reliability</strong>
+          <p style="font-size:13px">Very high. Meeting support tasks (summarization, action item extraction, agenda creation) are low-hallucination applications with provided content.</p>
+        </div>
+        <div class="card-green">
+          <strong style="display:block;color:var(--green);font-size:13px;margin-bottom:6px">Time savings</strong>
+          <p style="font-size:13px">Meeting preparation and follow-up are often the most time-intensive administrative work for knowledge workers. AI can cut this substantially.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
+        <div class="card" style="padding:16px 18px">
+          <strong style="display:block;font-size:13px;margin-bottom:8px">Before meetings</strong>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Draft agenda from objectives and attendees</li>
+            <li>Prepare briefing doc from background materials</li>
+            <li>Generate discussion questions</li>
+            <li>Anticipate objections or concerns</li>
+          </ul>
+        </div>
+        <div class="card" style="padding:16px 18px">
+          <strong style="display:block;font-size:13px;margin-bottom:8px">After meetings</strong>
+          <ul class="clean-list" style="font-size:13px">
+            <li>Extract action items from raw notes</li>
+            <li>Draft follow-up emails and summaries</li>
+            <li>Convert discussion to structured decisions log</li>
+            <li>Generate next-step checklist by owner</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Learning -->
+    <div class="uc-panel" id="uc-learning">
+      <div class="card-grid card-grid-2" style="margin-bottom:16px">
+        <div class="card-amber">
+          <strong style="display:block;color:var(--amber);font-size:13px;margin-bottom:6px">Underused application</strong>
+          <p style="font-size:13px">AI as a personal tutor is one of the highest-leverage but least-used applications. On-demand explanation, worked examples, and Socratic dialogue accelerate learning dramatically.</p>
+        </div>
+        <div class="card-blue">
+          <strong style="display:block;color:var(--blue);font-size:13px;margin-bottom:6px">Best technique</strong>
+          <p style="font-size:13px">Ask it to explain something, then push back, ask for a different angle, request a worked example, ask it to quiz you. Conversation is more effective than passive reading.</p>
+        </div>
+      </div>
+      <h4 style="margin-bottom:10px">Learning prompt patterns</h4>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="accent-strip" style="margin:0">
+          <div class="strip-label">Explain + Analogy</div>
+          <p>"Explain [CONCEPT] to me as if I'm an expert in [MY DOMAIN] but unfamiliar with this specific topic. Use an analogy to [FAMILIAR CONCEPT]."</p>
+        </div>
+        <div class="accent-strip" style="margin:0">
+          <div class="strip-label">Socratic probe</div>
+          <p>"Ask me questions about [TOPIC] to help me identify gaps in my understanding. Don't give me answers yet — let me attempt each one first."</p>
+        </div>
+        <div class="accent-strip" style="margin:0">
+          <div class="strip-label">Worked example</div>
+          <p>"Walk me through a realistic worked example of [CONCEPT] with real numbers and a plausible scenario. Show your reasoning at each step."</p>
+        </div>
+        <div class="accent-strip" style="margin:0">
+          <div class="strip-label">Pre-mortem</div>
+          <p>"If someone misunderstood [CONCEPT], what are the 3 most common errors they'd make? How would you spot those errors in practice?"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  TAB 5: AGENTIC AI                      -->
+<!-- ═══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-agentic">
+<div class="content-wrap">
+  <h2>Agentic AI</h2>
+  <p class="lead">The next frontier is not just AI that responds to prompts — it's AI that takes actions in the world. Agentic AI systems can use tools, browse the web, write and execute code, send emails, manage files, and complete multi-step tasks autonomously. This represents a fundamentally different mode of AI use, with dramatically higher leverage and proportionally higher risk.</p>
+
+  <div class="section">
+    <h3>What makes AI "agentic"</h3>
+    <div class="card-grid card-grid-3" style="margin-top:14px">
+      <div class="card">
+        <div style="font-size:20px;margin-bottom:8px">🛠️</div>
+        <strong style="display:block;font-size:14px;margin-bottom:6px">Tool use</strong>
+        <p style="font-size:13px">The model can call external tools: run code, search the web, read/write files, call APIs, send messages. Actions affect the real world, not just the chat window.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:20px;margin-bottom:8px">🔁</div>
+        <strong style="display:block;font-size:14px;margin-bottom:6px">Multi-step reasoning</strong>
+        <p style="font-size:13px">The model can break a goal into sub-tasks, execute them in sequence, incorporate results from earlier steps, and adapt its plan based on what it finds.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:20px;margin-bottom:8px">🤖</div>
+        <strong style="display:block;font-size:14px;margin-bottom:6px">Reduced human-in-loop</strong>
+        <p style="font-size:13px">Unlike chat, agentic workflows may run for minutes or hours, making many decisions autonomously before surfacing a result for human review.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Agentic capabilities available today</h3>
+    <table class="styled-table" style="margin-top:14px">
+      <thead>
+        <tr><th>Capability</th><th>What it enables</th><th>Maturity</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Code execution</strong></td>
+          <td>AI writes and runs code in sandboxed environments — data analysis, file processing, calculations</td>
+          <td><span class="tag tag-green">Production</span></td>
+        </tr>
+        <tr>
+          <td><strong>Web search & browsing</strong></td>
+          <td>Real-time research and information retrieval beyond training cutoff</td>
+          <td><span class="tag tag-green">Production</span></td>
+        </tr>
+        <tr>
+          <td><strong>File creation & editing</strong></td>
+          <td>AI creates, reads, and modifies documents, spreadsheets, and other files</td>
+          <td><span class="tag tag-green">Production</span></td>
+        </tr>
+        <tr>
+          <td><strong>Tool & API integration</strong></td>
+          <td>AI calls calendar, email, CRM, and other systems via APIs on your behalf</td>
+          <td><span class="tag tag-amber">Maturing</span></td>
+        </tr>
+        <tr>
+          <td><strong>Computer use</strong></td>
+          <td>AI operates a computer interface — clicks, types, navigates GUIs autonomously</td>
+          <td><span class="tag tag-amber">Early</span></td>
+        </tr>
+        <tr>
+          <td><strong>Multi-agent orchestration</strong></td>
+          <td>Multiple AI agents collaborate in parallel on complex, decomposable tasks</td>
+          <td><span class="tag tag-amber">Early</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3>The oversight imperative</h3>
+    <p>As AI systems take more autonomous action, the oversight framework must scale accordingly. The same capability that makes agentic AI valuable — its ability to act without constant direction — makes unchecked errors harder to catch and more impactful.</p>
+
+    <div class="card-grid card-grid-2" style="margin-top:14px">
+      <div class="card-amber">
+        <strong style="display:block;color:var(--amber);font-size:13px;margin-bottom:8px">Minimal footprint principle</strong>
+        <p style="font-size:13px">Well-designed agentic systems request only the permissions they need, take the most reversible action available at each step, and pause to confirm before irreversible actions. Design your agentic workflows this way.</p>
+      </div>
+      <div class="card-red">
+        <strong style="display:block;color:var(--red);font-size:13px;margin-bottom:8px">Irreversibility risk</strong>
+        <p style="font-size:13px">An AI that sends an email, deletes a file, or posts publicly cannot undo that action. The risk profile of agentic AI is fundamentally different from chat AI — errors propagate into the real world.</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:18px">
+      <span class="callout-icon">⚖️</span>
+      <div class="callout-body">
+        <div class="callout-title">For professional contexts</div>
+        <p>Any agentic workflow that touches client data, financial transactions, legal filings, or regulated communications requires careful policy design, audit trails, and human approval checkpoints — not because AI can't do the task, but because the accountability framework in regulated industries demands it. Build the oversight in from the start.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Retrieval-Augmented Generation (RAG)</h3>
+    <p>RAG is the most important technique for making AI reliable on specific, current, or proprietary knowledge. Rather than relying on the model's training data, RAG retrieves relevant documents from a database and injects them into the context window — so the model is reasoning from your actual documents, not its own memory.</p>
+    <div style="margin-top:16px">
+      <div class="prompt-builder">
+        <div class="pb-header">
+          <div class="pb-dot pb-dot-r"></div><div class="pb-dot pb-dot-y"></div><div class="pb-dot pb-dot-g"></div>
+          <span class="pb-title">RAG architecture — what the model receives</span>
+        </div>
+        <div class="pb-body">
+          <div class="pb-layer layer-system">
+            <div class="pb-role">System</div>
+            <div class="pb-text">You are an assistant with access to the firm's document library. Answer questions only from the provided context. If the answer is not in the context, say so.</div>
+          </div>
+          <div class="pb-layer layer-context">
+            <div class="pb-role">Retrieved Context [auto-injected]</div>
+            <div class="pb-text">[EXCERPT FROM DOCUMENT 1 — matched by semantic search]
+[EXCERPT FROM DOCUMENT 2 — matched by semantic search]
+[EXCERPT FROM DOCUMENT 3 — matched by semantic search]</div>
+          </div>
+          <div class="pb-layer layer-user">
+            <div class="pb-role">User query</div>
+            <div class="pb-text">What are the distribution standards in the Henderson Family Trust?</div>
+          </div>
+          <div class="pb-layer layer-output">
+            <div class="pb-role">Model response</div>
+            <div class="pb-text">Based on the provided document excerpts, the Henderson Family Trust distribution standards require the Trustee to consider... [grounded answer from retrieved documents]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--text-muted);margin-top:8px">RAG dramatically reduces hallucination because the model is citing provided text, not generating from memory. Building a RAG system over your firm's document library is one of the highest-ROI AI infrastructure investments available.</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  TAB 6: LIMITS & RISKS                  -->
+<!-- ═══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-limits">
+<div class="content-wrap">
+  <h2>Limits, Risks & Responsible Use</h2>
+  <p class="lead">Understanding where AI breaks down is as important as knowing where it excels. The professionals who will use AI most effectively are those who develop calibrated judgment about its failure modes — not those who either over-trust it or reflexively avoid it.</p>
+
+  <div class="section">
+    <h3>Risk profile by task type</h3>
+    <div class="card" style="margin-top:14px;padding:20px 22px">
+      <div class="risk-item">
+        <div class="risk-name">Drafting correspondence</div>
+        <div class="risk-bar-wrap"><div class="risk-bar" style="width:15%;background:var(--green)"></div></div>
+        <div class="risk-level" style="color:var(--green)">Low</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-name">Summarizing provided documents</div>
+        <div class="risk-bar-wrap"><div class="risk-bar" style="width:20%;background:var(--green)"></div></div>
+        <div class="risk-level" style="color:var(--green)">Low</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-name">Code generation (standard tasks)</div>
+        <div class="risk-bar-wrap"><div class="risk-bar" style="width:30%;background:var(--green)"></div></div>
+        <div class="risk-level" style="color:var(--green)">Low–Med</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-name">Research synthesis (grounded)</div>
+        <div class="risk-bar-wrap"><div class="risk-bar" style="width:30%;background:var(--green)"></div></div>
+        <div class="risk-level" style="color:var(--green)">Low–Med</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-name">Factual recall (dates, names, citations)</div>
+        <div class="risk-bar-wrap"><div class="risk-bar" style="width:65%;background:var(--amber)"></div></div>
+        <div class="risk-level" style="color:var(--amber)">Medium</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-name">Numerical / financial calculations</div>
+        <div class="risk-bar-wrap"><div class="risk-bar" style="width:60%;background:var(--amber)"></div></div>
+        <div class="risk-level" style="color:var(--amber)">Medium</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-name">Legal analysis and advice</div>
+        <div class="risk-bar-wrap"><div class="risk-bar" style="width:80%;background:var(--red)"></div></div>
+        <div class="risk-level" style="color:var(--red)">High</div>
+      </div>
+      <div class="risk-item" style="border-bottom:none">
+        <div class="risk-name">Agentic tasks with real-world actions</div>
+        <div class="risk-bar-wrap"><div class="risk-bar" style="width:75%;background:var(--red)"></div></div>
+        <div class="risk-level" style="color:var(--red)">High</div>
+      </div>
+    </div>
+    <p style="font-size:11.5px;color:var(--text-muted);margin-top:8px">Risk level reflects potential for consequential errors without adequate verification. Lower risk ≠ no verification needed.</p>
+  </div>
+
+  <div class="section">
+    <h3>The hallucination taxonomy</h3>
+    <div class="card-grid card-grid-2" style="margin-top:14px">
+      <div class="card">
+        <div class="tag tag-red" style="margin-bottom:8px">Type 1</div>
+        <strong style="display:block;font-size:13.5px;margin-bottom:5px">Factual fabrication</strong>
+        <p style="font-size:13px">The model invents specific facts — case citations, regulatory section numbers, executive names — with confident, fluent prose. These are hardest to catch because they look authoritative.</p>
+      </div>
+      <div class="card">
+        <div class="tag tag-amber" style="margin-bottom:8px">Type 2</div>
+        <strong style="display:block;font-size:13.5px;margin-bottom:5px">Outdated information</strong>
+        <p style="font-size:13px">The model's training has a cutoff date. Regulatory changes, market developments, and legal updates after that date may not be reflected. The model often doesn't know what it doesn't know.</p>
+      </div>
+      <div class="card">
+        <div class="tag tag-amber" style="margin-bottom:8px">Type 3</div>
+        <strong style="display:block;font-size:13.5px;margin-bottom:5px">Context drift</strong>
+        <p style="font-size:13px">In long conversations, the model can subtly shift its understanding of your situation or constraints, producing responses that no longer match what you actually specified early in the conversation.</p>
+      </div>
+      <div class="card">
+        <div class="tag tag-blue" style="margin-bottom:8px">Type 4</div>
+        <strong style="display:block;font-size:13.5px;margin-bottom:5px">Confident uncertainty</strong>
+        <p style="font-size:13px">The model may not adequately signal when it's uncertain. Its calibration on expressing doubt is imperfect — a confidently-stated answer may reflect low reliability that isn't communicated in the text.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Data and confidentiality</h3>
+    <p>Before pasting any client data, confidential documents, or proprietary information into a consumer AI product, understand how that data is handled.</p>
+    <div class="card-grid card-grid-2" style="margin-top:14px">
+      <div class="card-amber">
+        <strong style="display:block;color:var(--amber);font-size:13px;margin-bottom:8px">Questions to ask</strong>
+        <ul class="clean-list" style="font-size:13px">
+          <li>Is my input data used to train future models?</li>
+          <li>Is conversation content stored, and for how long?</li>
+          <li>What are the enterprise/API data handling terms?</li>
+          <li>Does my firm's data governance policy address AI?</li>
+        </ul>
+      </div>
+      <div class="card-green">
+        <strong style="display:block;color:var(--green);font-size:13px;margin-bottom:8px">Practical safeguards</strong>
+        <ul class="clean-list" style="font-size:13px">
+          <li>Use enterprise/API tiers with stricter data commitments</li>
+          <li>Redact client-identifying information where possible</li>
+          <li>Understand your firm's AI use policy before proceeding</li>
+          <li>Prefer local or private-deploy options for sensitive work</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <span class="callout-icon">🔒</span>
+      <div class="callout-body">
+        <div class="callout-title">Fiduciary context</div>
+        <p>In financial services and legal work, inputting client information into consumer AI products may implicate confidentiality obligations, fiduciary duties, and firm data governance policies. Treat AI data handling with the same rigor as any third-party service handling client information.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Building good verification habits</h3>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Never trust specific facts without checking</strong>
+          <p>Names, dates, case citations, regulatory numbers, statistical claims — verify these against primary sources before using them in any professional context.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Read the output, don't skim it</strong>
+          <p>The fluency of AI-generated text creates a false sense of familiarity. Actually read what was generated. Errors often appear mid-paragraph where attention drops.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Ask for uncertainty</strong>
+          <p>Explicitly ask: "Where are you least confident in this analysis?" or "What am I assuming here that might not be true?" Models can surface uncertainty when asked, even if they don't volunteer it.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Use AI for drafts, human judgment for decisions</strong>
+          <p>The clearest principle: use AI to accelerate production, not to replace judgment. The professional remains responsible for the decision, the filing, the advice — regardless of how much AI assisted in producing it.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  TAB 7: GLOSSARY                        -->
+<!-- ═══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-glossary">
+<div class="content-wrap">
+  <h2>Glossary</h2>
+  <p class="lead">Key terms for navigating AI in professional practice.</p>
+
+  <div class="section">
+    <h3>Prompting & interaction</h3>
+    <div class="card" style="margin-top:14px">
+      <div class="glossary-entry"><span class="glossary-term">Prompt</span><span class="glossary-def">The full input provided to an AI model. Includes system instructions, context, examples, and the user message. Prompt design is the primary lever for controlling output quality.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">System prompt</span><span class="glossary-def">Instructions provided to the model before the user message — typically defining persona, scope, tone, and behavioral rules. Usually invisible to end users; set by developers or operators.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Few-shot prompting</span><span class="glossary-def">Including 2–3 examples of the desired input→output pattern in the prompt. The most reliable way to specify format and style. Named for the few examples provided (vs. zero-shot, which uses none).</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Chain-of-thought</span><span class="glossary-def">A prompting technique that asks the model to show its reasoning step by step before delivering an answer. Substantially improves accuracy on multi-step logical or mathematical problems.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Context window</span><span class="glossary-def">The maximum amount of text the model can process in one call. Everything within it can be referenced; anything outside it is not available. Current frontier models support 128K–1M tokens.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Temperature</span><span class="glossary-def">A parameter controlling output randomness. Low temperature produces more deterministic, conservative responses. High temperature produces more varied, creative outputs. Typical range: 0–1 for production use.</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Reliability & quality</h3>
+    <div class="card" style="margin-top:14px">
+      <div class="glossary-entry"><span class="glossary-term">Hallucination</span><span class="glossary-def">When a model generates confident, fluent, but factually incorrect output. A structural consequence of how LLMs generate text — not a bug that will be fully eliminated. Verification is essential.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Grounding</span><span class="glossary-def">Anchoring model output to specific, provided source material rather than model memory. Grounded generation is substantially more reliable than ungrounded. Always provide documents for fact-sensitive tasks.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">RAG</span><span class="glossary-def">Retrieval-Augmented Generation. A system that retrieves relevant documents and injects them into the context window before generation. Enables AI to answer questions from proprietary or current document libraries reliably.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Training cutoff</span><span class="glossary-def">The date after which no information was included in the model's training data. Knowledge of events, regulations, or developments after this date is unavailable without web search or document injection.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Calibration</span><span class="glossary-def">How well a model's expressed confidence matches its actual accuracy. A well-calibrated model says "I'm uncertain" when it actually is uncertain. LLMs are imperfectly calibrated — confident-sounding outputs may be wrong.</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Systems & architecture</h3>
+    <div class="card" style="margin-top:14px">
+      <div class="glossary-entry"><span class="glossary-term">Agentic AI</span><span class="glossary-def">An AI system that uses tools and takes autonomous actions — browsing the web, writing and running code, sending messages, managing files — to complete multi-step tasks with reduced human involvement in each step.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Tool use</span><span class="glossary-def">The ability of an LLM to call external functions or APIs — search tools, code executors, file systems, calendar APIs — and incorporate results into its response. The mechanism behind agentic AI capabilities.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Multi-agent</span><span class="glossary-def">An architecture where multiple AI agents collaborate on a task — one decomposing the problem, others executing sub-tasks in parallel, one synthesizing results. Enables parallelization of complex workflows.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">API</span><span class="glossary-def">Application Programming Interface. In AI context: the programmatic interface for sending prompts and receiving responses from a model, typically with more configurability, enterprise data handling, and integration options than a consumer interface.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Fine-tuning</span><span class="glossary-def">Adapting a pre-trained model for specific tasks or behaviors using additional training on curated data. Produces models with specialized capability — a model fine-tuned on legal documents will perform better on legal tasks than a general model.</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Professional practice</h3>
+    <div class="card" style="margin-top:14px">
+      <div class="glossary-entry"><span class="glossary-term">Force multiplier</span><span class="glossary-def">A tool or technique that amplifies the output of a skilled practitioner without replacing their judgment. AI is a force multiplier — it increases the throughput of skilled knowledge workers, not a substitute for their expertise.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Human-in-the-loop</span><span class="glossary-def">A workflow design where a human reviews or approves AI outputs before they take effect. The appropriate oversight level depends on reversibility, stakes, and reliability of the AI task in question.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Prompt engineering</span><span class="glossary-def">The practice of designing, structuring, and refining prompts to elicit high-quality AI outputs consistently. A professional skill — not a technical one — that directly determines how much value you get from AI tools.</span></div>
+      <div class="glossary-entry"><span class="glossary-term">Minimal footprint</span><span class="glossary-def">A design principle for agentic AI: request only necessary permissions, prefer reversible actions, and pause to confirm before irreversible steps. Reduces risk of compounding errors in autonomous workflows.</span></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ─── TAB NAVIGATION ──────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ─── PRODUCTIVITY CALCULATOR ─────────────────────────────────────────
+function updateCalc() {
+  const hours = parseInt(document.getElementById('draft-hours').value);
+  const mult = parseInt(document.getElementById('speed-mult').value);
+  const pct = parseInt(document.getElementById('pct-use').value) / 100;
+
+  document.getElementById('draft-val').textContent = hours + ' hrs';
+  document.getElementById('speed-val').textContent = mult + '×';
+  document.getElementById('pct-val').textContent = Math.round(pct * 100) + '%';
+
+  const hoursOnAI = hours * pct;
+  const savedPerTask = hoursOnAI * (1 - 1/mult);
+  const hrsWeek = Math.round(savedPerTask * 10) / 10;
+  const hrsYear = Math.round(hrsWeek * 48);
+  const gain = Math.round((savedPerTask / hours) * 100);
+
+  document.getElementById('hrs-saved').textContent = hrsWeek;
+  document.getElementById('hrs-year').textContent = hrsYear;
+  document.getElementById('pct-gain').textContent = gain + '%';
+}
+updateCalc();
+
+// ─── PROMPT ANATOMY TOGGLES ──────────────────────────────────────────
+const anatomyOpen = [false, false, false, false, false];
+function toggleAnatomy(i) {
+  anatomyOpen[i] = !anatomyOpen[i];
+  const el = document.getElementById('anat-' + i);
+  if (anatomyOpen[i]) {
+    el.classList.add('open');
+    el.closest('.anatomy-block').classList.add('expanded');
+  } else {
+    el.classList.remove('open');
+    el.closest('.anatomy-block').classList.remove('expanded');
+  }
+}
+
+// ─── WORKFLOW SELECTOR ───────────────────────────────────────────────
+function selectWorkflow(i) {
+  document.querySelectorAll('.workflow-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.workflow-detail').forEach(d => d.classList.remove('active'));
+  document.querySelector(`.workflow-card[data-wf="${i}"]`).classList.add('active');
+  document.getElementById('wf-detail-' + i).classList.add('active');
+}
+
+// ─── USE CASE TABS ───────────────────────────────────────────────────
+function selectUC(id) {
+  document.querySelectorAll('.uc-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.uc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.uc-tab[data-uc="${id}"]`).classList.add('active');
+  document.getElementById('uc-' + id).classList.add('active');
+}
+</script>
+</body>
+</html>
