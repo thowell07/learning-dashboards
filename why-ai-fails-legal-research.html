@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Hallucination Problem — Why AI Struggles With Legal Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F2F1EC;
+    --paper-deep: #E9E8E1;
+    --ink: #17202E;
+    --ink-soft: #4A5261;
+    --rule: #C9C8BF;
+    --flag-red: #B42318;      /* negative treatment — hallucination data */
+    --flag-red-wash: #F7E7E5;
+    --flag-yellow: #9A6A00;   /* caution — limitations */
+    --flag-yellow-wash: #F6EDD6;
+    --flag-green: #1E6B47;    /* good law — mitigations */
+    --flag-green-wash: #E3EFE7;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+    --serif: 'Fraunces', Georgia, serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 860px; margin: 0 auto; padding: 0 24px 96px; }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    padding: 40px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 12px;
+  }
+
+  /* ---------- Hero: the specimen ---------- */
+  .hero { padding: 56px 0 24px; }
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: clamp(38px, 6.5vw, 64px);
+    line-height: 1.03;
+    letter-spacing: -0.015em;
+    max-width: 15ch;
+  }
+  .hero h1 em { font-style: italic; font-weight: 600; color: var(--flag-red); }
+  .hero .dek {
+    margin-top: 22px;
+    max-width: 58ch;
+    font-size: 18px;
+    color: var(--ink-soft);
+  }
+  .specimen {
+    margin: 44px 0 8px;
+    background: #FDFDFB;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--flag-red);
+    padding: 26px 28px 22px;
+    position: relative;
+    box-shadow: 0 1px 0 var(--paper-deep), 0 8px 24px rgba(23,32,46,0.06);
+  }
+  .specimen .label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 14px;
+  }
+  .specimen .cite {
+    font-family: var(--serif); font-size: clamp(17px, 2.6vw, 22px);
+    font-weight: 600; line-height: 1.45;
+  }
+  .specimen .cite .struck {
+    text-decoration: line-through;
+    text-decoration-color: var(--flag-red);
+    text-decoration-thickness: 2px;
+  }
+  .stamp {
+    position: absolute; right: 18px; top: -14px;
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--flag-red); border: 2px solid var(--flag-red);
+    padding: 5px 10px; background: var(--paper);
+    transform: rotate(2.5deg);
+  }
+  .specimen .note {
+    margin-top: 14px; font-family: var(--mono); font-size: 13px;
+    color: var(--flag-red);
+  }
+  .specimen-caption { font-size: 13px; color: var(--ink-soft); font-family: var(--mono); }
+
+  /* ---------- Section scaffolding ---------- */
+  section { margin-top: 72px; }
+  .kicker {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink-soft);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .kicker::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+  h2 {
+    font-family: var(--serif); font-weight: 700;
+    font-size: clamp(27px, 4vw, 36px); line-height: 1.12;
+    margin: 12px 0 20px; letter-spacing: -0.01em;
+  }
+  p + p { margin-top: 14px; }
+  .body-col p { max-width: 68ch; }
+  strong { font-weight: 600; }
+
+  /* ---------- Flag legend ---------- */
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 26px; font-family: var(--mono); font-size: 12.5px; }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-soft); }
+  .flagdot { width: 12px; height: 12px; display: inline-block; }
+  .flagdot.red { background: var(--flag-red); }
+  .flagdot.yellow { background: var(--flag-yellow); }
+  .flagdot.green { background: var(--flag-green); }
+
+  /* ---------- Data: bar chart ---------- */
+  .chart { margin-top: 28px; }
+  .bar-row { display: grid; grid-template-columns: 220px 1fr 64px; gap: 14px; align-items: center; padding: 9px 0; border-bottom: 1px dotted var(--rule); }
+  .bar-row .who { font-family: var(--mono); font-size: 13px; line-height: 1.35; }
+  .bar-row .who small { display: block; color: var(--ink-soft); font-size: 11px; }
+  .bar-track { background: var(--paper-deep); height: 20px; position: relative; }
+  .bar-fill { height: 100%; background: var(--flag-red); }
+  .bar-fill.mid { background: #C4653A; }
+  .bar-fill.low { background: var(--flag-yellow); }
+  .bar-row .pct { font-family: var(--mono); font-size: 14px; font-weight: 500; text-align: right; }
+  .chart-src { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-top: 12px; }
+  @media (max-width: 640px) {
+    .bar-row { grid-template-columns: 1fr 60px; }
+    .bar-row .who { grid-column: 1 / -1; padding-bottom: 4px; }
+  }
+
+  /* ---------- Stat strip ---------- */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 30px; }
+  .stat { background: #FDFDFB; padding: 20px 18px; }
+  .stat .n { font-family: var(--serif); font-weight: 900; font-size: 34px; color: var(--flag-red); line-height: 1; }
+  .stat .d { font-size: 13px; color: var(--ink-soft); margin-top: 8px; line-height: 1.45; }
+  @media (max-width: 640px) { .stats { grid-template-columns: 1fr; } }
+
+  /* ---------- Mechanism entries: docket style ---------- */
+  .mechanism {
+    border-top: 1px solid var(--ink);
+    padding: 24px 0 26px;
+    display: grid; grid-template-columns: 118px 1fr; gap: 24px;
+  }
+  .mechanism:last-of-type { border-bottom: 1px solid var(--ink); }
+  .mech-no {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
+    letter-spacing: 0.08em; text-transform: uppercase; padding-top: 5px;
+  }
+  .mechanism h3 { font-family: var(--serif); font-weight: 700; font-size: 21px; margin-bottom: 10px; line-height: 1.25; }
+  .mechanism p { max-width: 62ch; font-size: 15.5px; color: #2A3342; }
+  .mechanism .pull {
+    margin-top: 12px; font-family: var(--mono); font-size: 13px;
+    background: var(--flag-red-wash); border-left: 3px solid var(--flag-red);
+    padding: 10px 14px; color: #7C1812; max-width: 62ch;
+  }
+  @media (max-width: 640px) { .mechanism { grid-template-columns: 1fr; gap: 8px; } }
+
+  /* ---------- Caution box ---------- */
+  .caution {
+    background: var(--flag-yellow-wash); border: 1px solid #DCC58A;
+    border-left: 4px solid var(--flag-yellow);
+    padding: 22px 26px; margin-top: 30px;
+  }
+  .caution .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--flag-yellow); font-weight: 500; margin-bottom: 10px; }
+  .caution p { font-size: 15px; max-width: 66ch; }
+
+  /* ---------- Protocol (mitigations) ---------- */
+  .protocol { margin-top: 8px; }
+  .step {
+    background: #FDFDFB; border: 1px solid var(--rule);
+    border-left: 4px solid var(--flag-green);
+    padding: 22px 26px; margin-top: 18px;
+  }
+  .step .step-head { display: flex; align-items: baseline; gap: 14px; }
+  .step .step-no { font-family: var(--mono); font-size: 12px; color: var(--flag-green); font-weight: 500; letter-spacing: 0.1em; white-space: nowrap; }
+  .step h3 { font-family: var(--serif); font-weight: 700; font-size: 20px; line-height: 1.3; }
+  .step p { font-size: 15px; color: #2A3342; margin-top: 10px; max-width: 68ch; }
+  .step .why { font-family: var(--mono); font-size: 12.5px; color: var(--flag-green); margin-top: 12px; }
+  .prompt-box {
+    margin-top: 12px; font-family: var(--mono); font-size: 13px;
+    background: var(--flag-green-wash); padding: 12px 16px;
+    border: 1px dashed #A8C9B4; color: #14503A; line-height: 1.6;
+  }
+
+  /* ---------- Verdict ---------- */
+  .verdict {
+    margin-top: 72px; background: var(--ink); color: var(--paper);
+    padding: 44px 40px;
+  }
+  .verdict .kicker { color: #9AA3B2; }
+  .verdict .kicker::after { background: #3A4456; }
+  .verdict p {
+    font-family: var(--serif); font-size: clamp(19px, 3vw, 24px);
+    font-weight: 400; line-height: 1.5; margin-top: 18px; max-width: 34em;
+  }
+  .verdict p em { color: #E8B0AA; font-style: italic; }
+
+  /* ---------- Sources ---------- */
+  .sources { margin-top: 64px; }
+  .sources ol { list-style: none; counter-reset: src; }
+  .sources li {
+    counter-increment: src; padding: 12px 0; border-bottom: 1px dotted var(--rule);
+    font-size: 14px; color: var(--ink-soft); display: flex; gap: 16px;
+  }
+  .sources li::before {
+    content: "[" counter(src) "]";
+    font-family: var(--mono); font-size: 12px; color: var(--ink); white-space: nowrap; padding-top: 2px;
+  }
+  .sources li span strong { color: var(--ink); font-weight: 600; }
+  .sources a {
+    color: var(--flag-green); text-decoration: none;
+    border-bottom: 1px solid #A8C9B4; font-family: var(--mono); font-size: 12.5px;
+    word-break: break-word;
+  }
+  .sources a:hover, .sources a:focus-visible { color: var(--ink); border-bottom-color: var(--ink); }
+  .sources a:focus-visible { outline: 2px solid var(--flag-green); outline-offset: 2px; }
+  .footer-note { margin-top: 40px; font-family: var(--mono); font-size: 12px; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <span>Research Briefing · July 2026</span>
+    <span>Cite-Check Edition</span>
+  </header>
+
+  <div class="hero">
+    <h1>Why AI models <em>fabricate</em> the law</h1>
+    <p class="dek">Legal research is the domain where large language models fail most visibly — inventing cases, misstating holdings, and confirming their own errors. This briefing examines the mechanics of why, the empirical record, and the verification discipline that actually works.</p>
+
+    <div class="specimen">
+      <div class="stamp">No such case</div>
+      <div class="label">Exhibit A · Specimen of a fabricated citation</div>
+      <div class="cite"><span class="struck">Varghese v. China Southern Airlines Co., 925 F.3d 1339 (11th Cir. 2019)</span></div>
+      <div class="note">▸ Cited to a federal court in Mata v. Avianca (S.D.N.Y. 2023). Reporter, docket, and holding: all invented by ChatGPT. Sanctions followed.</div>
+    </div>
+    <p class="specimen-caption">Every element is formatted perfectly. None of it exists. That is the signature failure mode.</p>
+
+    <div class="legend">
+      <span><i class="flagdot red"></i>The failure record</span>
+      <span><i class="flagdot yellow"></i>Known limitations</span>
+      <span><i class="flagdot green"></i>Verified practice</span>
+    </div>
+  </div>
+
+  <!-- ============ SECTION I ============ -->
+  <section class="body-col">
+    <div class="kicker">Part I · The empirical record</div>
+    <h2>The numbers are not close</h2>
+    <p>Stanford RegLab's landmark study tested general-purpose models on over 800,000 verifiable legal questions and found hallucination rates between 58% and 88% — with models hallucinating <strong>at least 75% of the time when asked about a court's core holding</strong> [1][2]. On the task of identifying the precedential relationship between two cases, most models performed no better than random guessing [2].</p>
+    <p>Purpose-built legal tools do better, but not nearly as well as marketed. Stanford's follow-up study of retrieval-augmented commercial products found hallucination rates of roughly 17% for Lexis+ AI, 33% for Westlaw AI-Assisted Research, and 43% for GPT-4 — despite vendor claims of "hallucination-free" research [3][4]. (Both vendors contested the methodology, and the tools tested date to mid-2024; treat the exact figures as a snapshot, not a verdict [5].)</p>
+
+    <div class="chart">
+      <div class="bar-row">
+        <div class="who">Llama 2 <small>General model · Dahl et al. 2024</small></div>
+        <div class="bar-track"><div class="bar-fill" style="width:88%"></div></div>
+        <div class="pct">88%</div>
+      </div>
+      <div class="bar-row">
+        <div class="who">GPT-3.5 <small>General model · Dahl et al. 2024</small></div>
+        <div class="bar-track"><div class="bar-fill" style="width:69%"></div></div>
+        <div class="pct">69%</div>
+      </div>
+      <div class="bar-row">
+        <div class="who">GPT-4 <small>General model · Dahl et al. 2024</small></div>
+        <div class="bar-track"><div class="bar-fill" style="width:58%"></div></div>
+        <div class="pct">58%</div>
+      </div>
+      <div class="bar-row">
+        <div class="who">GPT-4 w/ retrieval <small>Magesh et al. 2024–25</small></div>
+        <div class="bar-track"><div class="bar-fill mid" style="width:43%"></div></div>
+        <div class="pct">43%</div>
+      </div>
+      <div class="bar-row">
+        <div class="who">Westlaw AI-Assisted <small>Legal RAG tool · Magesh et al.</small></div>
+        <div class="bar-track"><div class="bar-fill mid" style="width:33%"></div></div>
+        <div class="pct">33%</div>
+      </div>
+      <div class="bar-row">
+        <div class="who">Lexis+ AI <small>Legal RAG tool · Magesh et al.</small></div>
+        <div class="bar-track"><div class="bar-fill low" style="width:17%"></div></div>
+        <div class="pct">17%</div>
+      </div>
+      <div class="chart-src">Hallucination rates on legal queries. General models: Dahl et al., J. Legal Analysis (2024). RAG tools: Magesh et al., "Hallucination-Free?" (Stanford, 2024–25). Newer models have improved, but the gap between legal and other domains persists.</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">1,300+</div><div class="d">Court proceedings worldwide involving AI-fabricated material as of spring 2026, per the Charlotin tracker — accelerating from ~2/week in early 2025 to 2–3/day by late 2025 [6][7]</div></div>
+      <div class="stat"><div class="n">≥75%</div><div class="d">Hallucination rate on questions about a court's central ruling — the single task legal research most depends on [1]</div></div>
+      <div class="stat"><div class="n">100%</div><div class="d">Hallucination rate found for hyper-local law (a specific Australian tenancy act) in the "Place Matters" jurisdiction study [4]</div></div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION II ============ -->
+  <section>
+    <div class="kicker">Part II · Mechanisms of failure</div>
+    <h2>Why law breaks these models</h2>
+    <p style="max-width:68ch; margin-bottom: 26px;">None of this is random. Legal research sits at the intersection of five structural weaknesses in how language models are built — and law punishes each one harder than almost any other domain.</p>
+
+    <div class="mechanism">
+      <div class="mech-no">Mechanism 01</div>
+      <div>
+        <h3>The training objective rewards plausibility, not truth</h3>
+        <p>Models are trained to predict the most statistically likely next token, not the most accurate one. There is no internal concept of truth — only likelihood [8][9]. A citation is a pattern: party names, a reporter volume, a page, a court, a year. The model has learned that pattern flawlessly, so when its actual knowledge runs out, it completes the pattern anyway. OpenAI's own 2025 research on hallucination acknowledged that the training objective itself creates the incentive to fabricate when information is missing [9].</p>
+        <div class="pull">A citation is exactly the kind of output that looks most correct when it is most invented.</div>
+      </div>
+    </div>
+
+    <div class="mechanism">
+      <div class="mech-no">Mechanism 02</div>
+      <div>
+        <h3>Citations demand exact recall; models store compressed approximations</h3>
+        <p>Model weights are a lossy compression of training data. Legal citations are high-precision, low-redundancy strings — one wrong digit in a reporter page and the cite is broken. Most cases appear rarely in training data, and hallucination rates track that scarcity: models err least on Supreme Court cases and most on district court material and less prominent jurisdictions [2][4]. The "Place Matters" study found rates of 45% for Los Angeles scenarios climbing to 61% for Sydney [4]. Law's long tail — where most real research lives — is precisely where the compression fails.</p>
+      </div>
+    </div>
+
+    <div class="mechanism">
+      <div class="mech-no">Mechanism 03</div>
+      <div>
+        <h3>Post-training penalizes "I don't know"</h3>
+        <p>Reinforcement learning from human feedback rewards confident, well-formed, helpful-sounding answers and effectively penalizes abstention [10]. Two consequences: models rarely flag their own uncertainty (Stanford found they struggle to predict their own hallucinations [1]), and they exhibit <strong>sycophancy</strong> — uncritically accepting a user's incorrect legal premise and building on it [1][4]. Ask a leading question containing a wrong assumption about the law and the model will often confirm it. In Mata v. Avianca, the attorney asked ChatGPT to verify its own fake cases, and it obligingly confirmed them [11].</p>
+      </div>
+    </div>
+
+    <div class="mechanism">
+      <div class="mech-no">Mechanism 04</div>
+      <div>
+        <h3>Legal meaning is synthesized, not stored</h3>
+        <p>Even when a model identifies the right case, extracting the holding is a different problem. A holding is not a sentence sitting in the opinion — it's an interpretation requiring the facts, the procedural posture, the ratio versus dicta distinction, and subsequent treatment, held together in context [12]. Common-law doctrine builds seriatim, precedent on precedent; legal opinions are not atomic facts, and some questions have no determinate answer at all [13]. Models trained to produce fluent summaries will produce a fluent, confident, wrong statement of the rule.</p>
+        <div class="pull">Misstated holdings from real cases are now more common — and harder to catch — than wholly invented ones [14].</div>
+      </div>
+    </div>
+
+    <div class="mechanism">
+      <div class="mech-no">Mechanism 05</div>
+      <div>
+        <h3>Retrieval (RAG) narrows the problem but cannot close it</h3>
+        <p>Commercial legal AI grounds generation in retrieved documents. It helps — but Stanford identified limits specific to law: retrieval systems rank by textual similarity, while legal relevance turns on jurisdiction, date, procedural posture, and hierarchy of authority, so the system can pull inapposite cases that merely sound on-point [12][13]. Retrieved passages can be topically relevant but factually insufficient, or conflict with each other [15]. And retrieval verifies what sources say — not how the model reasons about them [16].</p>
+      </div>
+    </div>
+
+    <div class="caution">
+      <div class="tag">▲ Why deep reasoning models don't escape this</div>
+      <p>Extended reasoning improves multi-step logic, but reasoning chains operate over the same unverified substrate. A hallucinated premise generated early in a chain gets treated as ground truth by every subsequent step — and in agentic, multi-step research workflows, errors propagate and reinforce across iterations rather than getting caught [15]. Reasoning makes the argument better; it does not make the sources real. Court filings with fabricated citations from sophisticated firms using frontier tools were still being sanctioned as of spring 2026 [7][14].</p>
+    </div>
+  </section>
+
+  <!-- ============ SECTION III ============ -->
+  <section>
+    <div class="kicker">Part III · Verified practice</div>
+    <h2>The verification protocol</h2>
+    <p style="max-width:68ch;">The Stanford researchers' own conclusion: these tools offer real value <strong>"as the first step of legal research rather than the last word"</strong> [5]. ABA Formal Opinion 512 (2024) makes the corollary explicit — the duty to verify stays with the lawyer, always [7]. Here is what the evidence supports.</p>
+
+    <div class="protocol">
+      <div class="step">
+        <div class="step-head"><span class="step-no">01</span><h3>Match the tool to the task</h3></div>
+        <p>Use citator-backed legal platforms (Lexis+ AI, Westlaw) when citation reliability and treatment analysis matter — their curated databases and KeyCite/Shepard's integration are the real advantage, not RAG architecture per se. General models with live web search can actually compete on recent developments and non-standard sources [4]. Never use a bare, offline general model as a citation source.</p>
+        <div class="why">✓ Evidence: Vals benchmark — legal tools win on citations; ChatGPT-with-search outperformed on 5 question types [4]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-head"><span class="step-no">02</span><h3>Ground the model in the actual text</h3></div>
+        <p>The single highest-leverage move: don't ask the model what a case says — give it the opinion and ask questions against the document. This converts an open-ended recall task (where models fail worst) into a reading-comprehension task (where they're strong). Caveat: models can still misquote provided text, so quotes need checking too [17].</p>
+        <div class="prompt-box">"Here is the full opinion in [case]. Using only this document, state the holding, distinguish it from dicta, and give the pincite for each proposition."</div>
+      </div>
+
+      <div class="step">
+        <div class="step-head"><span class="step-no">03</span><h3>Prompt against the failure modes</h3></div>
+        <p>Require pincites and verbatim quotes for every proposition (fabrications rarely survive a demand for exact page references). Explicitly authorize abstention to counteract the RLHF confidence bias. And never embed your desired conclusion in the question — sycophancy means a leading prompt gets a confirming answer [1][4].</p>
+        <div class="prompt-box">"If you are not certain a case exists or that it stands for this proposition, say so explicitly rather than guessing. Do not agree with my framing if the law is otherwise."</div>
+      </div>
+
+      <div class="step">
+        <div class="step-head"><span class="step-no">04</span><h3>Verify every citation against the primary source</h3></div>
+        <p>Non-negotiable, per every state bar that has issued guidance [18]: pull each cited authority in Westlaw/Lexis, confirm it exists, read enough to confirm it stands for the stated proposition, and run the citator for negative treatment. Verifying existence is not enough — the growth area in sanctions is real cases with fabricated quotes or mischaracterized holdings [14]. Document the check.</p>
+        <div class="why">✓ Courts have sanctioned attorneys who verified existence but not substance; the Sixth Circuit imposed $15,000 per attorney in 2026 [7][14]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-head"><span class="step-no">05</span><h3>Use AI where it's structurally strong</h3></div>
+        <p>Issue-spotting, generating search strategies, summarizing documents you provide, first drafts of analysis you will rewrite, and stress-testing arguments. Keep it away from unsupervised authority-generation for anything filed or relied upon. Treat every output as a draft from a brilliant, occasionally confabulating junior associate whose work you must sign.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-head"><span class="step-no">06</span><h3>Watch the long tail</h3></div>
+        <p>Reliability degrades predictably: lower courts, smaller jurisdictions, local ordinances, very recent developments, and multi-jurisdiction surveys are the highest-risk zones [2][4]. Scale your skepticism accordingly — a confident answer about a municipal code deserves near-zero default trust.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Verdict ============ -->
+  <div class="verdict">
+    <div class="kicker">Holding</div>
+    <p>Hallucination in legal research is not a bug awaiting a patch — it is the expected output of a plausibility engine applied to a domain that demands <em>exact authority, hierarchical context, and honest uncertainty</em>. The models will keep improving; the duty to verify will not move. The lawyers who win with these tools are the ones who treat AI as the first step of research, never the last word.</p>
+  </div>
+
+  <!-- ============ Sources ============ -->
+  <section class="sources">
+    <div class="kicker">Sources</div>
+    <ol>
+      <li><span><strong>Dahl, Magesh, Suzgun & Ho</strong>, "Large Legal Fictions: Profiling Legal Hallucinations in LLMs," Journal of Legal Analysis 16:64 (2024) — 800k+ query study; 58–88% hallucination rates; ≥75% on holdings.<br><a href="https://dho.stanford.edu/wp-content/uploads/Hallucinations_JLA.pdf" target="_blank" rel="noopener">dho.stanford.edu/wp-content/uploads/Hallucinations_JLA.pdf</a></span></li>
+      <li><span><strong>Stanford RegLab / HAI</strong>, "Hallucinating Law" research summary, Stanford Law School (Jan. 2024).<br><a href="https://law.stanford.edu/2024/01/11/hallucinating-law-legal-mistakes-with-large-language-models-are-pervasive/" target="_blank" rel="noopener">law.stanford.edu/2024/01/11/hallucinating-law…</a></span></li>
+      <li><span><strong>Magesh et al.</strong>, "Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools," Stanford (2024, updated), arXiv:2405.20362 — Lexis+ AI 17%, Westlaw AIAR 33%, GPT-4 43%.<br><a href="https://arxiv.org/abs/2405.20362" target="_blank" rel="noopener">arxiv.org/abs/2405.20362</a></span></li>
+      <li><span><strong>AI Law Librarians / LLRX</strong>, "What the Science Says About Hallucinations in Legal Research" (Feb. 2026) — synthesis incl. "Place Matters" jurisdiction study and Vals Legal AI Report.<br><a href="https://www.ailawlibrarians.com/2026/02/19/what-the-science-says-about-hallucinations-in-legal-research/" target="_blank" rel="noopener">ailawlibrarians.com/2026/02/19/what-the-science-says…</a> · <a href="https://www.llrx.com/2026/02/what-the-science-says-about-hallucinations-in-legal-research/" target="_blank" rel="noopener">llrx.com mirror</a></span></li>
+      <li><span><strong>eDiscovery LLC</strong>, review of the Stanford RAG study and vendor responses (Apr. 2026) — methodological caveats; "first step, not last word."<br><a href="https://www.ediscoveryllc.com/hallucinations-by-west-and-lexis-ai-a-cautionary-study-and-cautions-about-the-study/" target="_blank" rel="noopener">ediscoveryllc.com/hallucinations-by-west-and-lexis-ai…</a></span></li>
+      <li><span><strong>Charlotin, D.</strong>, AI Hallucination Cases Database — 1,700+ tracked decisions worldwide as of July 2026 (searchable by country, tool, and outcome; updated daily).<br><a href="https://www.damiencharlotin.com/hallucinations/" target="_blank" rel="noopener">damiencharlotin.com/hallucinations</a></span></li>
+      <li><span><strong>GC AI Sanctions Tracker; Norton Rose Fulbright</strong>, "AI in litigation: Update on Gen AI sanctions in 2026" — escalating penalties, ABA Formal Op. 512, candor patterns.<br><a href="https://gc.ai/blog/ai-hallucination-legal-cases" target="_blank" rel="noopener">gc.ai/blog/ai-hallucination-legal-cases</a> · <a href="https://www.nortonrosefulbright.com/en-us/knowledge/publications/792d8bf3/ai-in-litigation-update-on-gen-ai-sanctions-in-2026" target="_blank" rel="noopener">nortonrosefulbright.com/…/ai-in-litigation</a></span></li>
+      <li><span><strong>Advocate Magazine</strong>, "A guide for lawyers to understanding how LLMs work" (Aug. 2025) — token prediction and citation pattern-mimicry.<br><a href="https://www.advocatemagazine.com/article/2025-august/a-guide-for-lawyers-to-understanding-how-llms-work" target="_blank" rel="noopener">advocatemagazine.com/article/2025-august/a-guide-for-lawyers…</a></span></li>
+      <li><span><strong>Morph</strong>, "AI Hallucination Examples" (2026), citing OpenAI's "Why Language Models Hallucinate" (2025) — training objective as root cause; cross-domain rates.<br><a href="https://www.morphllm.com/ai-hallucination-examples" target="_blank" rel="noopener">morphllm.com/ai-hallucination-examples</a></span></li>
+      <li><span><strong>"Hierarchical Memorization in LLMs: Evidence from Citation Generation,"</strong> arXiv:2511.08877 — RLHF penalizes abstention, rewards confident completion.<br><a href="https://arxiv.org/abs/2511.08877" target="_blank" rel="noopener">arxiv.org/abs/2511.08877</a></span></li>
+      <li><span><strong>Mata v. Avianca, Inc.</strong>, No. 22-cv-1461 (S.D.N.Y. June 22, 2023) — first ChatGPT sanctions; model confirmed its own fabrications when challenged. Case background and analysis:<br><a href="https://spellbook.com/learn/lawyer-fined-using-ai-legal-fake-citations" target="_blank" rel="noopener">spellbook.com/learn/lawyer-fined-using-ai-legal-fake-citations</a></span></li>
+      <li><span><strong>N.D.N.Y. Federal Court Bar Association</strong>, "Answers to Questions About Using Generative AI to Practice Law" (Jan. 2026) — retrieval-by-similarity vs. legal relevance; synthesis burden.<br><a href="https://ndnyfcba.org/answers-to-questions-about-using-generative-ai-to-practice-law/" target="_blank" rel="noopener">ndnyfcba.org/answers-to-questions-about-using-generative-ai…</a></span></li>
+      <li><span><strong>Magesh et al.</strong>, §3.2 "Limitations of RAG" — law as non-atomic, contested, seriatim precedent; distractor retrieval.<br><a href="https://arxiv.org/pdf/2405.20362" target="_blank" rel="noopener">arxiv.org/pdf/2405.20362 (§3.2)</a></span></li>
+      <li><span><strong>Norton Rose Fulbright (2026); Voibe (Apr. 2026)</strong> — shift toward fabricated quotes and mischaracterized holdings in real cases; Sullivan & Cromwell self-report; Sixth Circuit sanctions.<br><a href="https://www.getvoibe.com/resources/ai-hallucinations-law-firms/" target="_blank" rel="noopener">getvoibe.com/resources/ai-hallucinations-law-firms</a></span></li>
+      <li><span><strong>"SoK: Agentic RAG,"</strong> arXiv:2603.07379 — hallucination despite retrieval; error propagation across agentic iterations.<br><a href="https://arxiv.org/abs/2603.07379" target="_blank" rel="noopener">arxiv.org/abs/2603.07379</a></span></li>
+      <li><span><strong>"Reliable AI Needs to Externalize Implicit Knowledge,"</strong> arXiv:2605.02010 — RAG verifies sources, not reasoning; positional bias; multi-hop failures.<br><a href="https://arxiv.org/abs/2605.02010" target="_blank" rel="noopener">arxiv.org/abs/2605.02010</a></span></li>
+      <li><span><strong>HAQQ</strong>, "Large Language Models for Lawyers: The 2026 Guide" — misquotation of provided text; doubling down on challenge.<br><a href="https://haqq.ai/blog/lawyers-guide-to-large-language-models" target="_blank" rel="noopener">haqq.ai/blog/lawyers-guide-to-large-language-models</a></span></li>
+      <li><span><strong>The Legal Prompts</strong>, state bar guidance survey (Mar. 2026) — 35+ state bars; universal verification requirement; competence duty extends to technology.<br><a href="https://thelegalprompts.com/blog/ai-hallucinations-legal-work-avoid-sanctions-2026" target="_blank" rel="noopener">thelegalprompts.com/blog/ai-hallucinations-legal-work…</a></span></li>
+    </ol>
+    <p class="footer-note">Prepared July 10, 2026. Figures reflect published studies at their testing dates; commercial tools evolve rapidly and current rates may differ. This briefing is informational, not legal advice — verify all cited authorities against primary sources before reliance. (Yes, including these.)</p>
+  </section>
+
+</div>
+</body>
+</html>
