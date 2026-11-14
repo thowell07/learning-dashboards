@@ -259,6 +259,7 @@ export function createMap(ctx) {
   ].filter(Boolean);
   // labels that appear only when the machine is lifted apart
   const xl = (title, line, pos) => { const t = ctx.tags.add(h('div', { class: 'xlabel' }, h('b', {}, title), h('span', {}, line)), pos); t.el.style.display = 'none'; return t; };
+  const MID = !TALL && sr.width < 1340; // tablet landscape: the console covers the right side, so two labels move clear of it
   const xLabs = TALL ? [
     xl('Layer 1 · The model', 'Fixed numbers and arithmetic. It keeps nothing between calls.', V(0, PLATES[3] + LD[1].y + 3 * FLOOR_GAP * TS + 2.9, 0)),
     xl('Layer 3 · The system', 'Ordinary software. Your data rests here.', P(190, 5.6, RY + LD[3].y + 0.9)),
@@ -266,9 +267,9 @@ export function createMap(ctx) {
     xl('Layer 2 · How it was made', 'Finished before your prompt arrived.', V(FX - 3.4, 2.4, FZ2 + LD[2].z)),
   ] : [
     xl('Layer 1 · The model', 'Fixed numbers and arithmetic. It keeps nothing between calls.', V(3.6, PLATES[2] + LD[1].y + 2.4, 0)),
-    xl('Layer 3 · The system', 'Ordinary software. Your data rests here.', P(330, 7.6, RY + LD[3].y + 0.5)),
-    xl('Layer 4 · Control', 'Where a rule or a person can say no.', P(338, WALL_R + 0.6, 1.5)),
-    xl('Layer 2 · How it was made', 'Finished before your prompt arrived.', V(FX + LD[2].x - 1.2, 0.3, FZ2 + 4.6)),
+    xl('Layer 3 · The system', 'Ordinary software. Your data rests here.', MID ? P(285, 9.2, RY + LD[3].y + 0.5) : P(330, 7.6, RY + LD[3].y + 0.5)),
+    xl('Layer 4 · Control', 'Where a rule or a person can say no.', MID ? P(80, WALL_R + 1.4, 0.6) : P(338, WALL_R + 0.6, 1.5)),
+    xl('Layer 2 · How it was made', 'Finished before your prompt arrived.', V(FX + LD[2].x - (MID ? 3.6 : 1.2), 0.3, FZ2 + 4.6)),
   ];
 
   // ----- selection -----
@@ -441,7 +442,8 @@ export function createMap(ctx) {
   }
   return {
     scene, camera, controls, update, frame, textAlt, select,
-    insets: () => { if (!ctx.isNarrow()) return { l: 0, r: 0, t: 52, b: 0 }; const hd = ui.querySelector('.maphead').getBoundingClientRect(), box = (sel ? card : consoleEl).getBoundingClientRect(); return { l: 0, r: 0, t: hd.bottom - 40, b: box.height + 16 }; },
+    // Below about 1700 wide the console would sit on the ring and its tags, so the model moves left of it.
+    insets: () => { if (!ctx.isNarrow()) return { l: 0, r: Math.max(0, Math.min(300, 1700 - window.innerWidth)), t: 52, b: 0 }; const hd = ui.querySelector('.maphead').getBoundingClientRect(), box = (sel ? card : consoleEl).getBoundingClientRect(); return { l: 0, r: 0, t: hd.bottom - 40, b: box.height + 16 }; },
     escape: () => { if (sel) ctx.go('#/'); else if (exploded) setExploded(false); },
     setExploded,
     dispose() { alive = false; ctx.canvas.removeEventListener('pointerdown', onDown); ctx.canvas.removeEventListener('pointerup', onUp); ctx.canvas.removeEventListener('pointermove', onMove); ctx.canvas.style.cursor = ''; ctx.tags.layer.classList.remove('dimmed'); },

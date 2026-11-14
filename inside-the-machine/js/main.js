@@ -47,7 +47,7 @@ function freeArea() {
   // The part of the canvas not covered by interface plates. The model is centered there.
   if (!view) return { l: 0, r: 0, t: 0, b: 0 };
   const ins = view.insets ? view.insets() : {};
-  if (isNarrow()) return { l: 0, r: 0, t: 0, b: 0, ...(viewKey === 'map' ? ins : {}) };
+  if (isNarrow()) { document.documentElement.style.setProperty('--free-l', '0px'); return { l: 0, r: 0, t: 0, b: 0, ...(viewKey === 'map' ? ins : {}) }; }
   const deck = hud.querySelector('.deck');
   const deckH = deck ? deck.getBoundingClientRect().height + 26 : 0;
   document.documentElement.style.setProperty('--deck-h', `${Math.round(deckH)}px`);
@@ -55,10 +55,26 @@ function freeArea() {
   const present = document.body.classList.contains('present');
   const l = present ? 476 : ins.l ?? (hud.querySelector('.stop') ? (window.innerWidth <= 1240 ? 400 : 446) : 0);
   const r = ins.r ?? (briefEl.hidden ? 0 : briefEl.classList.contains('open') ? 440 : 60);
+  document.documentElement.style.setProperty('--free-l', `${l}px`); // the caption stays clear of the left column
   const t = guide && !present ? guide.bar.getBoundingClientRect().bottom + 6 : ins.t ?? 52;
   return { l, r: present ? 0 : r, t, b };
 }
+// The two right-hand plates share one column. When the upper one is tall, the lower one gets a scroll cap so they never overlap.
+const floatSeen = new WeakSet();
+const floatRO = new ResizeObserver(() => fitFloats());
+function fitFloats() {
+  const tr = hud.querySelector('.float-tr'), br = hud.querySelector('.float-br');
+  if (!br) return;
+  br.style.maxHeight = ''; br.style.overflowY = '';
+  if (!tr) return;
+  if (!floatSeen.has(tr)) { floatSeen.add(tr); floatRO.observe(tr); }
+  if (isNarrow() || document.body.classList.contains('present')) return;
+  const a = tr.getBoundingClientRect(), b = br.getBoundingClientRect();
+  if (!a.height || !b.height || a.left >= b.right || a.right <= b.left || a.bottom + 10 <= b.top) return;
+  br.style.maxHeight = `${Math.max(96, Math.round(b.bottom - a.bottom - 10))}px`; br.style.overflowY = 'auto';
+}
 function applyInsets(snap) {
+  fitFloats();
   const f = freeArea();
   off.tx = (f.l - f.r) / 2; off.ty = (f.t - f.b) / 2;
   if (snap || motion.reduced) { off.x = off.tx; off.y = off.ty; }
@@ -66,6 +82,7 @@ function applyInsets(snap) {
 function frameView() {
   if (!view) return;
   const f = freeArea();
+  document.body.classList.toggle('tight', !isNarrow() && W - f.l - f.r < 520); // a small model drops its label subtitles
   view.frame && view.frame({ W, H, freeW: Math.max(120, W - f.l - f.r), freeH: Math.max(120, H - f.t - f.b) });
 }
 function resize() {
