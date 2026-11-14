@@ -1,0 +1,37 @@
+/* Stop 1. Tokens: the cutting table. */
+.s1 .s1-textgrp { flex: 1 1 430px; min-width: 0; }
+.s1-input { width: 100%; background: var(--ink); border: 1px solid var(--rule); border-radius: 2px; padding: 9px 11px; font: 400 15px/1.3 var(--mono); color: var(--ember); caret-color: var(--ember); min-height: 38px; }
+.s1-input:hover { border-color: var(--dim); }
+.s1-input:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; border-color: var(--ember); }
+.s1-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.s1-tally b { font-size: 34px; }
+.s1-ratio { font: 400 13.5px/1.45 var(--sans); color: var(--paper); }
+.s1-other { font: 400 13px/1.45 var(--sans); color: var(--dim); margin-top: 3px; min-height: 1.45em; }
+.s1-log { display: grid; gap: 0; max-height: 118px; overflow: auto; scrollbar-width: thin; scrollbar-color: var(--rule) transparent; min-height: 22px; }
+.s1-log:empty::before { content: 'No merges yet. Every tile is still a single byte.'; font: 400 13px/1.45 var(--sans); color: var(--faint); }
+.s1-log li { display: flex; gap: 7px; align-items: baseline; font: 400 12px/1.5 var(--mono); padding: 2px 0; border-top: 1px solid var(--rule-soft); animation: slidein 240ms ease both; white-space: pre; }
+.s1-log li .a { color: var(--dim); }
+.s1-log li .plus, .s1-log li .arrow { color: var(--faint); }
+.s1-log li .m { color: var(--ember); }
+.s1-log li .r { margin-left: auto; color: var(--faint); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.s1-gauge dl { display: grid; gap: 2px; margin: 0; }
+.s1-gauge dt { font: 500 10.5px/1.35 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin-top: 7px; }
+.s1-gauge dt:first-child { margin-top: 0; }
+.s1-gauge dd { margin: 0; font: 400 14px/1.4 var(--sans); color: var(--paper); min-height: 1.4em; }
+.s1-gauge .meter { margin: 4px 0 2px; }
+.s1-gauge .meter i.over { background: var(--verm); }
+.s1-gauge { transition: border-color var(--t), box-shadow var(--t); }
+.s1-gauge.s1-hot { border-color: var(--ember); box-shadow: 0 0 0 1px var(--ember); }
+.s1-recv .s1-ids { font: 400 13px/1.6 var(--mono); color: var(--faint); overflow-wrap: anywhere; max-height: 132px; overflow: auto; }
+.s1-recv .s1-ids.lit { color: var(--dim); }
+.s1-recv .s1-ids.lit span { color: var(--ember); animation: tokin 260ms ease both; }
+.s1-intake { translate: -50% -100%; }
+
+@media (max-width: 999px) {
+  .s1 .s1-textgrp { flex: 1 1 100%; }
+  .s1-input { font-size: 16px; }
+  .s1-log { max-height: 96px; }
+}
+
+/* The deck here is two rows tall, so the caption sits higher while the guide is open. */
+@media (min-width: 1000px) { .guide-on .s1 + .caption { bottom: 176px; } }

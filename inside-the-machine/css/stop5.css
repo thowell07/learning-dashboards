@@ -1,0 +1,50 @@
+/* Stop 5. Training. */
+.s5-lab { translate: -50% -100%; text-align: center; pointer-events: none !important; background: rgba(12,11,10,.8); padding: 4px 8px 5px; border-radius: 2px; }
+.s5-lab b { display: block; font: 500 11px/1.2 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--paper); white-space: nowrap; }
+.s5-lab span { display: block; font: 400 11.5px/1.25 var(--sans); color: var(--dim); white-space: nowrap; margin-top: 1px; }
+.s5-sky { translate: -50% -100%; text-align: center; pointer-events: none !important; padding-bottom: 5px; }
+.s5-sky .w { font: 500 12.5px/1.15 var(--mono); color: var(--paper); background: rgba(12,11,10,.8); padding: 2px 5px; display: inline-block; white-space: nowrap; }
+.s5-sky .p { display: block; font: 400 10.5px/1.2 var(--mono); color: var(--dim); margin-top: 1px; white-space: nowrap; }
+.s5-sky.true .w { background: var(--paper); color: var(--pink); }
+.s5-sky.true .p { color: var(--paper); }
+.s5-walk { translate: -50% -190%; font: 500 12px/1.2 var(--mono); color: #0d1f1c; background: var(--teal); padding: 2px 6px; border-radius: 1px; white-space: nowrap; pointer-events: none !important; }
+.s5-insp { translate: -50% calc(-100% - 8px); pointer-events: none !important; background: var(--paper); color: var(--pink); padding: 5px 8px; border-radius: 1px; box-shadow: 0 6px 18px rgba(0,0,0,.5); text-align: center; }
+.s5-insp b { display: block; font: 500 12px/1.25 var(--mono); white-space: nowrap; }
+.s5-insp span { display: block; font: 400 11px/1.3 var(--mono); color: #4b463d; white-space: nowrap; }
+
+.s5-sent { font: 400 13px/1.8 var(--mono); min-height: 1.8em; }
+.s5-sent .idle, .s5-sent .gone { font: 400 13px/1.45 var(--sans); color: var(--faint); display: block; }
+.s5-sent .gone { color: var(--paper); }
+.s5-sent .tk { display: inline-block; margin-right: 6px; padding: 0 3px; color: var(--dim); border: 1px solid transparent; }
+.s5-sent .tk.prev { color: var(--pink); background: var(--paper); }
+.s5-sent .tk.next { color: var(--paper); border-color: var(--paper); }
+.s5-sent .tk.hide { color: var(--paper); border: 1px dashed var(--dim); min-width: 2.2em; text-align: center; }
+.s5-sent .tk.mine { color: var(--ember); }
+.s5-sent .tk.mine.prev { color: #1a1206; background: var(--ember); }
+.s5-sent .tk.mine.next { border-color: var(--ember); }
+.s5-note { font: 400 11.5px/1.45 var(--mono); color: var(--faint); margin-top: 4px; }
+.s5-inv { display: block; } .s5-inv.on { color: var(--ember); }
+.s5-fp { font: 500 11.5px/1 var(--mono); color: var(--paper); background: var(--plate2); padding: 2px 5px; border: 1px solid var(--rule-soft); letter-spacing: 0.04em; text-transform: none; }
+.s5-tally div { position: relative; padding: 7px 10px; }
+.s5-tally b { font-size: 23px; }
+.s5-spark { position: absolute; right: 8px; top: 6px; width: 62px; height: 22px; }
+.s5-out { display: grid; gap: 6px; max-height: 150px; overflow: auto; scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
+.s5-out .line { font: 400 13px/1.5 var(--mono); }
+.s5-out .given { color: var(--dim); }
+.s5-out .tk { color: var(--teal); }
+.s5-out .verb { color: var(--ember); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.s5-gen { border-top: 1px solid var(--rule-soft); padding-top: 5px; }
+.s5-gen .tagline { font: 500 10px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.s5-gen .tagline.copy { color: var(--paper); } .s5-gen .tagline.mine { color: var(--ember); }
+.s5-comp { background: var(--plate2); padding: 7px 9px 8px; border-left: 3px solid var(--ember); display: grid; gap: 3px; }
+.s5-comp .why { font: 400 12.5px/1.4 var(--sans); color: var(--paper2); }
+.s5-secret:not(.on) .s5-copies { opacity: 0.45; }
+.seg input:disabled { cursor: not-allowed; }
+@media (min-width: 1000px) { .guide-on .caption.s5-cap { bottom: 196px; } }
+@media (max-width: 999px) {
+  .s5-lab span { display: none; }
+  .s5-lab b { font-size: 9.5px; letter-spacing: 0.08em; }
+  .s5-sky .w { font-size: 10px; padding: 1px 3px; }
+  .s5-sky .p { font-size: 9px; }
+  .s5-out { max-height: none; }
+}

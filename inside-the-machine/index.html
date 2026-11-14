@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inside the Machine</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="A paper-and-light model of how modern AI systems work. Follow one prompt through the whole machine.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230c0b0a'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ffa62b'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/stop1.css">
+<link rel="stylesheet" href="css/stop2.css">
+<link rel="stylesheet" href="css/stop3.css">
+<link rel="stylesheet" href="css/stop5.css">
+<link rel="stylesheet" href="css/stop6.css">
+<link rel="stylesheet" href="css/stop7.css">
+<link rel="stylesheet" href="css/stop8.css">
+<link rel="stylesheet" href="css/stop9.css">
+<link rel="stylesheet" href="css/stop13.css">
+<link rel="stylesheet" href="css/stop14.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three/three.module.min.js", "three/addons/": "./vendor/three/" } }
+</script>
+</head>
+<body>
+<a class="skip" href="#hud">Skip to the controls</a>
+
+<div id="stage">
+  <canvas id="gl" tabindex="0" role="img" aria-label="Three-dimensional model. Use the Text version button for the same lesson in words. Arrow keys turn the model, plus and minus zoom."></canvas>
+  <div id="tags" aria-hidden="false"></div>
+</div>
+
+<header id="topbar">
+  <a class="wordmark" href="#/" aria-label="Inside the Machine, back to the map">
+    <span class="wm-mark" aria-hidden="true"></span><span class="wm-text">Inside the Machine</span>
+  </a>
+  <div id="crumb" aria-live="polite"></div>
+  <nav id="rail" aria-label="All 14 stops, in order"></nav>
+  <nav id="topnav" aria-label="Stop navigation"></nav>
+</header>
+
+<main id="hud"></main>
+
+<aside id="brief" aria-label="The brief for this stop" hidden></aside>
+
+<dialog id="textalt" aria-labelledby="textalt-title">
+  <div class="ta-head">
+    <h2 id="textalt-title">Text version</h2>
+    <button class="btn ghost" id="textalt-close" type="button">Close</button>
+  </div>
+  <div id="textalt-body"></div>
+</dialog>
+
+<div id="veil" aria-hidden="true"></div>
+<noscript><p class="noscript">This model needs JavaScript. Turn JavaScript on and reload. Every lesson also has a Text version button.</p></noscript>
+<div id="fatal" hidden></div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

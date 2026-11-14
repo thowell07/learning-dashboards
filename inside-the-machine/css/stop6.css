@@ -1,0 +1,40 @@
+/* Stop 6. Three levers. Teal marks the weights, grey the system prompt, ember the context. */
+.s6-q { font: 400 14px/1.45 var(--sans); color: var(--dim); }
+.s6-q b { color: var(--paper); font-weight: 500; }
+.s6-answer { margin-top: 8px; font: 400 14.5px/1.75 var(--mono); min-height: 5.2em; }
+.s6-answer span { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; animation: tokin 300ms ease both; }
+.s6-answer .seg-w { text-decoration-color: var(--teal); color: #cfe9e3; }
+.s6-answer .seg-s { text-decoration-color: var(--sys); text-decoration-style: dashed; color: var(--paper2); }
+.s6-answer .seg-c { text-decoration-color: var(--ember); color: #ffd9a1; }
+.s6-chip { margin-top: 6px; font: 400 12px/1.45 var(--mono); color: var(--paper2); border-left: 2px dashed var(--sys); padding-left: 9px; }
+.s6-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 10px; font: 500 10.5px/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+.s6-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.s6-legend span::before { content: ''; width: 16px; border-top: 2px solid var(--teal); }
+.s6-legend .s::before { border-top: 2px dashed var(--sys); }
+.s6-legend .c::before { border-top-color: var(--ember); }
+.s6-why { margin-top: 8px; font: 400 13px/1.45 var(--sans); color: var(--dim); }
+.s6-tally b { font-size: 26px; }
+.s6-tally .s6-vword { font-size: 22px; line-height: 1.18; }
+.s6-owners { display: grid; gap: 8px; margin: 0; }
+.s6-owners > div { border-left: 3px solid var(--teal); padding-left: 9px; }
+.s6-owners > div.s { border-left: 3px dashed var(--sys); }
+.s6-owners > div.c { border-left-color: var(--ember); }
+.s6-owners dt { font: 500 10.5px/1.3 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper); }
+.s6-owners dd { margin: 2px 0 0; font-size: 13px; line-height: 1.42; color: var(--dim); }
+.s6-owners dd b { color: var(--paper); font-weight: 500; }
+.s6-cap.w { color: var(--teal); } .s6-cap.s { color: var(--sys); } .s6-cap.c { color: var(--ember); }
+.s6-lev.w b { color: var(--teal); } .s6-lev.s b { color: var(--sys); } .s6-lev.c b { color: var(--ember); }
+.s6-valve b { color: var(--ember); }
+.s6-lev { translate: -50% 8px; }
+.s6-lev.s { translate: -50% 50px; }
+.s6-slabtag { translate: 6px -50%; font: 500 10px/1.2 var(--mono); letter-spacing: 0.06em; color: var(--ember); background: rgba(12,11,10,.82); padding: 2px 5px; white-space: nowrap; pointer-events: none !important; }
+.s6-slabtag.sys { color: var(--sys); }
+.s6 .deck { gap: 10px 18px; }
+@media (min-width: 1000px) { .guide-on .s6-caption { bottom: 156px; } }
+@media (max-width: 999px) {
+  .s6-slabtag { font-size: 8.5px; padding: 1px 3px; }
+  .s6-answer { font-size: 13.5px; min-height: 0; }
+  .s6-tally b { font-size: 22px; } .s6-tally .s6-vword { font-size: 18px; }
+}
+body.present .s6-caption { text-align: left; font-size: 19px; }
+.s6-caption .seg-w { color: var(--teal); } .s6-caption .seg-s { color: var(--sys); font-style: italic; } .s6-caption .seg-c { color: var(--ember); }

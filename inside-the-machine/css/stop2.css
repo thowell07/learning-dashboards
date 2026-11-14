@@ -1,0 +1,68 @@
+/* Stop 2. Embeddings: the room of meaning. */
+.s2-tag { translate: 9px -50%; font: 500 10.5px/1.2 var(--mono); letter-spacing: 0.03em; white-space: nowrap; border: 0; border-radius: 2px; padding: 2px 5px; background: rgba(12,11,10,.55); color: var(--dim); transition: color var(--t), background var(--t), opacity var(--t); }
+.s2-tag.word:hover { color: var(--paper); background: rgba(12,11,10,.9); }
+.s2-tag.clause { color: var(--paper); background: rgba(12,11,10,.8); border: 1px solid var(--rule); font-size: 10px; letter-spacing: 0.08em; }
+.s2-tag.chunk { color: #1a1206; background: var(--ember); font-size: 10px; letter-spacing: 0.08em; }
+.s2-tag.query { color: #1a1206; background: var(--ember); translate: 14px -50%; display: inline-block; pointer-events: none; }
+.s2-tag.hl { color: var(--paper); background: rgba(12,11,10,.92); outline: 1px solid var(--dim); }
+.s2-tag.clause.hl { outline: 1px solid var(--blue); color: var(--blue); }
+.s2-tag.chunk.hl { outline: 2px solid var(--paper); }
+.s2-tag.sel { color: var(--pink); background: var(--paper); outline: 2px solid var(--ember); outline-offset: 1px; }
+.s2-tag.chunk.sel { background: var(--ember); }
+.s2-tag:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+.s2-dim .s2-tag:not(.hl):not(.sel):not(.query):not(.chunk) { opacity: 0.3; }
+.s2-zone { color: var(--faint); translate: -50% -100%; opacity: 0.85; }
+.s2-dim .s2-zone { opacity: 0.3; }
+.s2-desktag { translate: -50% -100%; }
+
+.s2-info { display: grid; gap: 6px; min-height: 96px; }
+.s2-info h3 { font: 400 22px/1.15 var(--serif); }
+.s2-info h3.q { color: var(--ember); font-size: 18px; }
+.s2-hint, .s2-sub { font: 400 13px/1.45 var(--sans); color: var(--dim); }
+.s2-nums { font: 400 10.5px/1.45 var(--mono); color: var(--faint); overflow-wrap: anywhere; }
+.s2-nn { display: grid; gap: 0; }
+.s2-nn li { display: grid; grid-template-columns: minmax(84px, auto) 38px 1fr; gap: 2px 8px; align-items: center; padding: 3px 0; border-top: 1px solid var(--rule-soft); font: 400 12.5px/1.4 var(--mono); }
+.s2-nn .sc { color: var(--paper); text-align: right; }
+.s2-nn .bar { height: 5px; background: var(--rule-soft); position: relative; }
+.s2-nn .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--paper); }
+.s2-nn .sub { grid-column: 1 / -1; font: 400 12.5px/1.4 var(--sans); color: var(--dim); }
+.s2-nn li.clause .nm { color: var(--blue); } .s2-nn li.clause .bar i { background: var(--blue); }
+.s2-nn li.chunk .nm { color: var(--ember); } .s2-nn li.chunk .bar i { background: var(--ember); }
+.s2-kept { font: 400 13px/1.45 var(--sans); border-left: 2px solid var(--ember); padding-left: 9px; }
+.s2-kept b { display: block; font: 500 10.5px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+.s2-kept i { font-style: normal; color: var(--ember); }
+.s2-tally b { font-size: 34px; }
+
+.s2-file .s2-memo { box-shadow: 0 14px 40px rgba(0,0,0,.55); border-radius: 2px; }
+.s2-filecap { display: flex; justify-content: space-between; font: 500 10px/1.3 var(--mono); letter-spacing: 0.11em; text-transform: uppercase; color: #7a7262; margin-bottom: 6px; }
+.s2-filecap span:last-child { color: #a85a00; }
+.s2-memo.deleted .s2-filecap span:last-child { color: var(--verm); }
+.s2-memo p { position: relative; padding-left: 22px; }
+.s2-memo .s2-n { position: absolute; left: 0; top: 1px; width: 15px; height: 15px; border-radius: 50%; border: 1px solid #8a8272; font: 500 9.5px/13px var(--mono); text-align: center; color: #6d665a; transition: background 300ms ease, color 300ms ease, border-color 300ms ease; }
+.s2-memo p.sent .s2-n { background: var(--ember); border-color: var(--ember); color: #1a1206; }
+.s2-memo .s2-gone { display: none; padding-left: 0; font: 400 12px/1.45 var(--mono); color: var(--dim); }
+.s2-memo.deleted { background: transparent; border: 1px dashed var(--rule); color: var(--dim); }
+.s2-memo.deleted p:not(.s2-gone) { display: none; }
+.s2-memo.deleted .s2-gone { display: block; }
+.s2-memo.deleted .lh { border-bottom-color: var(--rule); text-decoration: line-through; text-decoration-color: var(--verm); }
+.s2-memo.deleted .lh i { color: var(--faint); }
+
+.s2 .s2-askgrp { flex: 1 1 380px; min-width: 0; }
+.s2-input, .s2-select { background: var(--ink); border: 1px solid var(--rule); border-radius: 2px; padding: 7px 9px; font: 400 13px/1.3 var(--mono); color: var(--paper); min-height: 32px; }
+.s2-input { flex: 1 1 150px; min-width: 120px; color: var(--ember); caret-color: var(--ember); }
+.s2-input::placeholder { color: var(--faint); }
+.s2-select { max-width: 250px; }
+.s2-input:focus-visible, .s2-select:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+
+@media (max-width: 999px) {
+  .s2-tag.word:not(.hl):not(.sel) { display: none; }
+  .s2-zone { display: block; font-size: 9px; letter-spacing: 0.1em; }
+  @media (max-width: 699px) { .s2-zone { display: none; } }
+  .s2-tag { font-size: 10px; }
+  .s2-input { font-size: 16px; }
+  .s2-select { max-width: 100%; width: 100%; font-size: 16px; }
+  .s2 .s2-askgrp { flex: 1 1 100%; }
+}
+
+/* The deck here is two rows tall, so the caption sits higher while the guide is open. */
+@media (min-width: 1000px) { .guide-on .s2 + .caption { bottom: 176px; } }
